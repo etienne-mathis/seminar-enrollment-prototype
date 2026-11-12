@@ -389,15 +389,15 @@
       .rank-btn   { width: 40px; height: 40px; font-size: 14px; }
     }
 
-    /* Motivationsblock — volle Breite, unterhalb der Modulliste */
+    /* Motivationsblock — volle Breite, erscheint oben sobald Erstwunsch gesetzt */
     .motiv-block {
       overflow: hidden; max-height: 0;
-      transition: max-height .35s cubic-bezier(.2,0,0,1), margin-top .2s;
-      margin-top: 0;
+      transition: max-height .35s cubic-bezier(.2,0,0,1), margin-bottom .2s;
+      margin-bottom: 0;
     }
     .motiv-block.open {
       max-height: 320px;
-      margin-top: 20px;
+      margin-bottom: 20px;
     }
 
     .motiv-block-inner {
@@ -411,8 +411,8 @@
       display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
     }
     .motiv-block-title {
-      font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .1em; color: var(--orange);
+      font-size: 12px; font-weight: 600;
+      color: var(--orange);
     }
     .motiv-block-module {
       font-size: 12px; color: var(--soft);
@@ -685,10 +685,8 @@
 
     <!-- Module + Motivationsschreiben -->
     <div class="module-col">
-      <div class="section-label">Verfügbare Module — Priorität setzen</div>
-      <div class="module-list" id="moduleList"></div>
 
-      <!-- Motivationsschreiben: erscheint in voller Breite sobald Erstwunsch gesetzt -->
+      <!-- Motivationsschreiben: erscheint oben sobald Erstwunsch gesetzt, schiebt Module nach unten -->
       <div class="motiv-block" id="motivSection">
         <div class="motiv-block-inner">
           <div class="motiv-block-head">
@@ -704,6 +702,9 @@
           <div class="char-counter" id="charCount">0 / 500</div>
         </div>
       </div>
+
+      <div class="section-label">Verfügbare Module — Priorität setzen</div>
+      <div class="module-list" id="moduleList"></div>
     </div>
 
     <!-- Summary-Panel -->
