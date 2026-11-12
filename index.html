@@ -4,705 +4,659 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wahlpflichtmodul-Einschreibung — HTW Dresden</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          colors: {
+            // HTW Dresden brand palette
+            htw: {
+              orange:       '#E05A1C',
+              'orange-hover':'#C44E18',
+              'orange-pale': '#FEF0E8',
+              'orange-muted':'#F4A37A',
+              text:         '#1A1A1A',
+              'text-soft':  '#6B6B6B',
+              border:       '#E2E2E2',
+              'border-strong': '#C4C4C4',
+              surface:      '#FFFFFF',
+              bg:           '#F6F6F6',
+              error:        '#CC0000',
+              'error-pale': '#FFF0F0',
+            },
+            rank: {
+              1: '#E05A1C', // orange — Erstwunsch
+              2: '#0070C0', // blue   — Zweitwunsch
+              3: '#2E7D32', // green  — Drittwunsch
+            }
+          },
+          borderRadius: {
+            DEFAULT:  '4px',
+            sm:       '3px',
+            md:       '4px',   // buttons, inputs — Sola Notion-exact
+            lg:       '6px',   // cards
+            xl:       '8px',   // panels
+            '2xl':    '10px',  // login card, overlays
+            full:     '9999px',
+          },
+          boxShadow: {
+            soft:   '0 1px 2px -1px rgba(0,0,0,0.08), 0 4px 12px -6px rgba(0,0,0,0.10)',
+            raised: '0 1px 2px -1px rgba(0,0,0,0.10), 0 8px 20px -8px rgba(0,0,0,0.14)',
+            modal:  '0 20px 60px -16px rgba(0,0,0,0.30)',
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    :root {
-      --rot:        #CC0000;
-      --rot-dark:   #A30000;
-      --blau:       #0070C0;
-      --gruen:      #107C10;
-      --text:       #1a1a1a;
-      --text-soft:  #555;
-      --border:     #ddd;
-      --bg:         #f5f5f5;
-      --white:      #ffffff;
-      --radius:     6px;
-      --shadow:     0 1px 3px rgba(0,0,0,0.10);
+    * { -webkit-tap-highlight-color: transparent; }
+
+    /* Rank button active states — inline styles can't use tailwind's JIT */
+    .rank-btn-active-1 { background: #E05A1C !important; border-color: #E05A1C !important; color: white !important; }
+    .rank-btn-active-2 { background: #0070C0 !important; border-color: #0070C0 !important; color: white !important; }
+    .rank-btn-active-3 { background: #2E7D32 !important; border-color: #2E7D32 !important; color: white !important; }
+
+    /* Progressive reveal animation */
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .slide-down { animation: slideDown 0.22s cubic-bezier(0.2,0,0,1); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.2s cubic-bezier(0.2,0,0,1); }
+
+    /* Focus ring — HTW orange */
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #E05A1C;
+      box-shadow: 0 0 0 3px rgba(224, 90, 28, 0.15);
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Motivation textarea no resize on X axis */
+    #motivationText { resize: vertical; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 15px;
-      line-height: 1.5;
-      min-height: 100vh;
-    }
-
-    /* ─── Header ─────────────────────────────── */
-    header {
-      background: var(--rot);
-      color: white;
-    }
-
-    .header-inner {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .logo {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      border-right: 2px solid rgba(255,255,255,0.35);
-      padding-right: 20px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .logo span { font-weight: 300; }
-
-    .header-subtitle {
-      font-size: 14px;
-      font-weight: 400;
-      opacity: 0.92;
-    }
-
-    /* ─── Fristleiste ───────────────────────── */
-    .fristleiste {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .fristleiste-inner {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 9px 24px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: var(--text-soft);
-    }
-
-    .frist-indikator {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #2e7d32;
-      flex-shrink: 0;
-    }
-
-    /* ─── Hauptlayout ───────────────────────── */
-    main {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 28px 24px 48px;
-      display: grid;
-      grid-template-columns: 1fr 310px;
-      gap: 24px;
-      align-items: start;
-    }
-
-    .kap-label {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-soft);
-      margin-bottom: 12px;
-    }
-
-    /* ─── Modul-Karten ──────────────────────── */
-    .modul-liste {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .modul-karte {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-left: 3px solid transparent;
-      border-radius: var(--radius);
-      padding: 15px 16px;
-      transition: border-color 0.12s, box-shadow 0.12s;
-    }
-
-    .modul-karte:hover {
-      box-shadow: var(--shadow);
-    }
-
-    .modul-karte.rang-1 { border-left-color: var(--rot); }
-    .modul-karte.rang-2 { border-left-color: var(--blau); }
-    .modul-karte.rang-3 { border-left-color: var(--gruen); }
-
-    .modul-kopf {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-
-    .modul-name {
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-
-    .modul-meta {
-      display: flex;
-      gap: 14px;
-      font-size: 12px;
-      color: var(--text-soft);
-      margin-bottom: 7px;
-    }
-
-    .modul-beschreibung {
-      font-size: 13px;
-      color: var(--text-soft);
-      line-height: 1.6;
-    }
-
-    /* ─── Prioritäts-Buttons ────────────────── */
-    .rang-buttons {
-      display: flex;
-      gap: 6px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .rang-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      background: var(--bg);
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-soft);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      touch-action: manipulation;
-      transition: border-color 0.1s, background 0.1s, color 0.1s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .rang-btn:hover { border-color: #aaa; }
-    .rang-btn.aktiv-1 { background: var(--rot);  border-color: var(--rot);  color: white; }
-    .rang-btn.aktiv-2 { background: var(--blau); border-color: var(--blau); color: white; }
-    .rang-btn.aktiv-3 { background: var(--gruen); border-color: var(--gruen); color: white; }
-
-    /* ─── Zusammenfassung ────────────────────── */
-    .zusammenfassung {
-      position: sticky;
-      top: 24px;
-    }
-
-    .zusammenfassung-karte {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .zsf-kopf {
-      background: var(--rot);
-      color: white;
-      padding: 13px 18px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .zsf-koerper {
-      padding: 16px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .zsf-slot {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .slot-badge {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      font-size: 13px;
-      font-weight: 700;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .slot-badge-1 { background: var(--rot);  }
-    .slot-badge-2 { background: var(--blau); }
-    .slot-badge-3 { background: var(--gruen); }
-
-    .slot-inhalt { flex: 1; min-width: 0; }
-
-    .slot-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-soft);
-      margin-bottom: 1px;
-    }
-
-    .slot-wert {
-      font-size: 13px;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .slot-leer {
-      color: #bbb;
-      font-style: italic;
-      font-weight: 400;
-    }
-
-    .zsf-fuss {
-      border-top: 1px solid var(--border);
-      padding: 14px 18px;
-    }
-
-    .btn-einschreiben {
-      width: 100%;
-      padding: 11px;
-      background: var(--rot);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.12s;
-    }
-
-    .btn-einschreiben:hover:not(:disabled) { background: var(--rot-dark); }
-
-    .btn-einschreiben:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-    .validierungsmeldung {
-      display: none;
-      font-size: 12px;
-      margin-top: 10px;
-      padding: 8px 10px;
-      border-radius: 4px;
-    }
-
-    .validierungsmeldung.fehler {
-      background: #fff0f0;
-      color: var(--rot);
-      border: 1px solid #f5c6c6;
-    }
-
-    /* ─── Bestätigungs-Overlay ──────────────── */
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      z-index: 50;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .overlay.sichtbar { display: flex; }
-
-    .bestaetigung-box {
-      background: white;
-      border-radius: 10px;
-      padding: 32px 28px;
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .best-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: #e8f5e9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      color: #2e7d32;
-    }
-
-    .best-titel {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .best-text {
-      font-size: 13px;
-      color: var(--text-soft);
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
-
-    .best-liste {
-      text-align: left;
-      background: var(--bg);
-      border-radius: 6px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .best-zeile {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .best-badge {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      font-size: 12px;
-      font-weight: 700;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .best-modul { font-size: 13px; font-weight: 500; }
-    .best-rang  { font-size: 11px; color: var(--text-soft); }
-
-    .best-zeitstempel {
-      font-size: 11px;
-      color: var(--text-soft);
-      margin-bottom: 22px;
-    }
-
-    .btn-schliessen {
-      padding: 10px 32px;
-      background: var(--rot);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.12s;
-    }
-
-    .btn-schliessen:hover { background: var(--rot-dark); }
-
-    /* ─── Responsive ────────────────────────── */
-    @media (max-width: 700px) {
-      main {
-        grid-template-columns: 1fr;
-        padding: 16px 14px 40px;
-        gap: 20px;
-      }
-
-      .zusammenfassung {
-        position: static;
-        order: -1;
-      }
-
-      .header-inner { gap: 12px; }
-      .logo { font-size: 17px; padding-right: 14px; }
-      .header-subtitle { font-size: 13px; }
-
-      .rang-btn { width: 42px; height: 42px; font-size: 15px; }
+    /* Mobile rank buttons larger */
+    @media (max-width: 640px) {
+      .rank-btn { width: 40px !important; height: 40px !important; font-size: 14px !important; }
     }
   </style>
 </head>
-<body>
 
-  <header>
-    <div class="header-inner">
-      <div class="logo">HTW <span>|</span> Dresden</div>
-      <div class="header-subtitle">Wahlpflichtmodul-Einschreibung — Wintersemester 2026/27</div>
+<body class="font-sans bg-htw-bg text-htw-text antialiased">
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 1 — LOGIN
+═══════════════════════════════════════════════════════════ -->
+<div id="screen-login" class="min-h-screen flex flex-col">
+
+  <!-- Orange top-stripe — brand identifier -->
+  <div class="h-1 bg-htw-orange w-full"></div>
+
+  <div class="flex-1 flex items-center justify-center px-5 py-12">
+    <div class="w-full max-w-[360px]">
+
+      <!-- Wordmark -->
+      <div class="flex items-center gap-3.5 mb-10">
+        <div class="w-10 h-10 rounded-lg bg-htw-orange flex items-center justify-center flex-shrink-0">
+          <span class="text-white text-[11px] font-bold tracking-tight leading-none">HTW</span>
+        </div>
+        <div>
+          <div class="text-[17px] font-semibold tracking-[-0.02em] leading-tight">HTW Dresden</div>
+          <div class="text-[11px] text-htw-text-soft uppercase tracking-[0.09em] mt-0.5">Hochschule für Technik und Wirtschaft</div>
+        </div>
+      </div>
+
+      <!-- Login card -->
+      <div class="bg-htw-surface border border-htw-border rounded-2xl p-7 shadow-soft">
+        <div class="mb-6">
+          <h1 class="text-[22px] font-semibold tracking-[-0.02em]">Anmelden</h1>
+          <p class="text-sm text-htw-text-soft mt-1">Wahlpflichtmodul-Einschreibung WS 2026/27</p>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+
+          <!-- s-Nummer -->
+          <div class="mb-4">
+            <label for="sNummer" class="block text-[11px] font-semibold uppercase tracking-[0.09em] text-htw-text-soft mb-1.5">
+              s-Nummer
+            </label>
+            <input
+              id="sNummer"
+              type="text"
+              placeholder="z. B. s88618"
+              autocomplete="username"
+              class="w-full px-3 py-2.5 text-sm border border-htw-border rounded-md bg-htw-bg placeholder:text-htw-text-soft/40 transition-all"
+            >
+          </div>
+
+          <!-- Passwort -->
+          <div class="mb-5">
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="passwort" class="block text-[11px] font-semibold uppercase tracking-[0.09em] text-htw-text-soft">
+                Passwort
+              </label>
+            </div>
+            <div class="relative">
+              <input
+                id="passwort"
+                type="password"
+                placeholder="HTW-Infrastrukturpasswort"
+                autocomplete="current-password"
+                class="w-full px-3 py-2.5 pr-10 text-sm border border-htw-border rounded-md bg-htw-bg placeholder:text-htw-text-soft/40 transition-all"
+              >
+              <button
+                type="button"
+                onclick="togglePwVisibility()"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-htw-text-soft hover:text-htw-text transition-colors"
+                aria-label="Passwort anzeigen"
+              >
+                <i data-lucide="eye" class="w-4 h-4" id="eyeIcon"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Error state -->
+          <div id="loginError" class="hidden mb-4 flex items-center gap-2 text-sm text-htw-error bg-htw-error-pale border border-htw-error/20 rounded-md px-3 py-2.5">
+            <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0"></i>
+            <span>s-Nummer oder Passwort nicht gültig.</span>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full py-2.5 bg-htw-orange hover:bg-htw-orange-hover text-white text-sm font-semibold rounded-md transition-colors"
+          >
+            Anmelden
+          </button>
+
+        </form>
+      </div>
+
+      <!-- Prototype disclaimer -->
+      <p class="text-center text-[11px] text-htw-text-soft/60 mt-5">
+        Simulierter Login — Prototyp · Beliebige s-Nummer &amp; Passwort eingeben
+      </p>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 2 — EINSCHREIBUNG
+═══════════════════════════════════════════════════════════ -->
+<div id="screen-enrollment" style="display:none" class="min-h-screen flex-col">
+
+  <!-- Sticky header -->
+  <header class="sticky top-0 z-20 bg-htw-text text-white shadow-raised">
+    <div class="max-w-[980px] mx-auto px-5 py-3 flex items-center justify-between gap-4">
+
+      <!-- Left: brand + context -->
+      <div class="flex items-center gap-3.5">
+        <div class="w-8 h-8 rounded-md bg-htw-orange flex items-center justify-center flex-shrink-0">
+          <span class="text-white text-[10px] font-bold leading-none">HTW</span>
+        </div>
+        <div class="hidden sm:block w-px h-7 bg-white/15"></div>
+        <div>
+          <div class="text-[13px] font-semibold leading-tight">Wahlpflichtmodul-Einschreibung</div>
+          <div class="text-[10px] text-white/50 uppercase tracking-[0.08em] mt-0.5">WS 2026/27 · HTW Dresden</div>
+        </div>
+      </div>
+
+      <!-- Right: user + logout -->
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <div class="text-[12px] font-medium" id="userNameDisplay">—</div>
+          <div class="text-[10px] text-white/50" id="userSNrDisplay">—</div>
+        </div>
+        <button
+          onclick="handleLogout()"
+          class="flex items-center gap-1.5 text-[12px] text-white/60 hover:text-white transition-colors px-2 py-1.5 rounded hover:bg-white/10"
+        >
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Abmelden</span>
+        </button>
+      </div>
+
     </div>
   </header>
 
-  <div class="fristleiste">
-    <div class="fristleiste-inner">
-      <div class="frist-indikator"></div>
-      Anmeldefrist läuft: <strong style="color: var(--text); margin: 0 2px;">30. November 2026, 23:59 Uhr</strong>
-      &nbsp;·&nbsp; Änderungen bis zum Fristende jederzeit möglich
+  <!-- Frist indicator -->
+  <div class="bg-white border-b border-htw-border">
+    <div class="max-w-[980px] mx-auto px-5 py-2.5 flex items-center gap-2 text-[12px] text-htw-text-soft">
+      <span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0 inline-block"></span>
+      Anmeldefrist aktiv:
+      <strong class="text-htw-text font-semibold ml-0.5">30. November 2026, 23:59 Uhr</strong>
+      <span class="hidden sm:inline text-htw-border mx-1">·</span>
+      <span class="hidden sm:inline">Änderungen bis Fristende jederzeit möglich</span>
     </div>
   </div>
 
-  <main>
-    <div>
-      <div class="kap-label">Verfügbare Module — Platz 1, 2 oder 3 vergeben</div>
-      <div class="modul-liste" id="modulListe"></div>
-    </div>
+  <!-- Main grid -->
+  <main class="max-w-[980px] mx-auto w-full px-5 pt-7 pb-20
+               grid grid-cols-1 lg:grid-cols-[1fr_288px] gap-6 items-start">
 
-    <div class="zusammenfassung">
-      <div class="zusammenfassung-karte">
-        <div class="zsf-kopf">Deine Auswahl</div>
-        <div class="zsf-koerper">
-          <div class="zsf-slot">
-            <div class="slot-badge slot-badge-1">1</div>
-            <div class="slot-inhalt">
-              <div class="slot-label">Erstwunsch</div>
-              <div class="slot-wert" id="slot1"><span class="slot-leer">nicht gewählt</span></div>
-            </div>
-          </div>
-          <div class="zsf-slot">
-            <div class="slot-badge slot-badge-2">2</div>
-            <div class="slot-inhalt">
-              <div class="slot-label">Zweitwunsch</div>
-              <div class="slot-wert" id="slot2"><span class="slot-leer">nicht gewählt</span></div>
-            </div>
-          </div>
-          <div class="zsf-slot">
-            <div class="slot-badge slot-badge-3">3</div>
-            <div class="slot-inhalt">
-              <div class="slot-label">Drittwunsch</div>
-              <div class="slot-wert" id="slot3"><span class="slot-leer">nicht gewählt</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="zsf-fuss">
-          <button class="btn-einschreiben" id="submitBtn" disabled>Einschreibung abschicken</button>
-          <div class="validierungsmeldung fehler" id="valMsg"></div>
-        </div>
+    <!-- ── Modul-Spalte ───────────────────────────── -->
+    <section>
+      <div class="text-[10px] font-semibold uppercase tracking-[0.16em] text-htw-text-soft mb-3">
+        Verfügbare Module — Priorität setzen: 1 · 2 · 3
       </div>
-    </div>
+      <div id="moduleList" class="flex flex-col gap-2.5"></div>
+    </section>
+
+    <!-- ── Zusammenfassungs-Panel ─────────────────── -->
+    <aside class="lg:sticky lg:top-[64px]">
+      <div class="bg-white border border-htw-border rounded-xl overflow-hidden shadow-soft">
+
+        <!-- Panel header -->
+        <div class="bg-htw-orange px-4 py-3 flex items-center gap-2">
+          <i data-lucide="list-ordered" class="w-4 h-4 text-white/80"></i>
+          <span class="text-[13px] font-semibold text-white">Deine Auswahl</span>
+        </div>
+
+        <!-- Slots -->
+        <div class="px-4 py-4 flex flex-col gap-4 border-b border-htw-border">
+
+          <!-- Slot 1 — Erstwunsch -->
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-full bg-rank-1 flex items-center justify-center flex-shrink-0">
+              <span class="text-white text-[11px] font-bold">1</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[10px] font-semibold uppercase tracking-[0.08em] text-htw-text-soft mb-0.5">Erstwunsch</div>
+              <div id="slot1" class="text-[13px] font-medium truncate">
+                <span class="text-htw-text-soft/50 italic font-normal">nicht gewählt</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slot 2 — Zweitwunsch -->
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-full bg-rank-2 flex items-center justify-center flex-shrink-0">
+              <span class="text-white text-[11px] font-bold">2</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[10px] font-semibold uppercase tracking-[0.08em] text-htw-text-soft mb-0.5">Zweitwunsch</div>
+              <div id="slot2" class="text-[13px] font-medium truncate">
+                <span class="text-htw-text-soft/50 italic font-normal">nicht gewählt</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slot 3 — Drittwunsch -->
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-full bg-rank-3 flex items-center justify-center flex-shrink-0">
+              <span class="text-white text-[11px] font-bold">3</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[10px] font-semibold uppercase tracking-[0.08em] text-htw-text-soft mb-0.5">Drittwunsch</div>
+              <div id="slot3" class="text-[13px] font-medium truncate">
+                <span class="text-htw-text-soft/50 italic font-normal">nicht gewählt</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Motivationsschreiben — progressive reveal -->
+        <div id="motivationSection" style="display:none" class="border-b border-htw-border slide-down">
+          <div class="px-4 pt-3.5 pb-1 flex items-start gap-2">
+            <i data-lucide="pencil-line" class="w-3.5 h-3.5 text-htw-orange mt-0.5 flex-shrink-0"></i>
+            <div>
+              <div class="text-[11px] font-semibold text-htw-orange">Motivationsschreiben</div>
+              <div class="text-[11px] text-htw-text-soft mt-0.5 leading-snug">
+                Warum ist <span id="motivModulName" class="font-medium text-htw-text"></span> dein Erstwunsch?
+              </div>
+            </div>
+          </div>
+          <div class="px-4 pb-4 pt-2.5">
+            <textarea
+              id="motivationText"
+              rows="5"
+              maxlength="500"
+              placeholder="Begründe deine Wahl in 2–5 Sätzen …"
+              oninput="onMotivInput()"
+              class="w-full text-[13px] border border-htw-border rounded-md px-3 py-2.5 bg-htw-bg
+                     placeholder:text-htw-text-soft/40 transition-all leading-relaxed"
+            ></textarea>
+            <div class="flex justify-end mt-1">
+              <span id="charCount" class="text-[10px] text-htw-text-soft/50">0 / 500</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="px-4 py-4">
+          <button
+            id="submitBtn"
+            onclick="handleSubmit()"
+            class="w-full py-2.5 text-[13px] font-semibold rounded-md transition-colors
+                   bg-htw-orange text-white hover:bg-htw-orange-hover
+                   disabled:bg-htw-border disabled:text-htw-text-soft/40 disabled:cursor-not-allowed"
+            disabled
+          >
+            Einschreibung abschicken
+          </button>
+          <div id="valMsg" style="display:none"
+               class="mt-2.5 text-[12px] text-htw-error bg-htw-error-pale border border-htw-error/20 rounded-md px-3 py-2">
+          </div>
+        </div>
+
+      </div>
+    </aside>
   </main>
 
-  <div class="overlay" id="overlay">
-    <div class="bestaetigung-box">
-      <div class="best-icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2.5"
-             stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </div>
-      <div class="best-titel">Einschreibung eingegangen</div>
-      <div class="best-text">
-        Deine Modulwahl wurde erfolgreich gespeichert.<br>
-        Du kannst sie bis zum Fristende jederzeit ändern.
-      </div>
-      <div class="best-liste" id="bestListe"></div>
-      <div class="best-zeitstempel" id="bestZeitstempel"></div>
-      <button class="btn-schliessen" onclick="overlaySchliessen()">Schließen</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     OVERLAY — BESTÄTIGUNG
+═══════════════════════════════════════════════════════════ -->
+<div id="overlay" style="display:none"
+     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-5">
+  <div class="bg-white rounded-2xl p-7 max-w-[420px] w-full text-center shadow-modal fade-up">
+
+    <!-- Success icon -->
+    <div class="w-14 h-14 rounded-full bg-green-50 border border-green-100 flex items-center justify-center mx-auto mb-5">
+      <i data-lucide="check" class="w-7 h-7 text-green-600"></i>
     </div>
+
+    <h2 class="text-[20px] font-semibold tracking-[-0.02em] mb-2">Einschreibung eingegangen</h2>
+    <p class="text-[13px] text-htw-text-soft leading-relaxed mb-5">
+      Deine Modulwahl wurde erfolgreich gespeichert.<br>
+      Änderungen sind bis zum Fristende jederzeit möglich.
+    </p>
+
+    <div id="confirmList" class="text-left bg-htw-bg rounded-lg px-4 py-3.5 mb-3 flex flex-col gap-3.5"></div>
+
+    <div id="confirmTs" class="text-[11px] text-htw-text-soft/60 mb-5"></div>
+
+    <button
+      onclick="closeOverlay()"
+      class="px-8 py-2.5 bg-htw-orange hover:bg-htw-orange-hover text-white text-[13px] font-semibold rounded-md transition-colors"
+    >
+      Schließen
+    </button>
   </div>
+</div>
 
-  <script>
-    const MODULE = [
-      {
-        id: "ml-ki",
-        name: "Maschinelles Lernen und KI",
-        cp: "5 CP",
-        semester: "5./6. Sem.",
-        beschreibung: "Grundlagen des überwachten und unüberwachten Lernens, neuronale Netze, praktische Umsetzung mit Python und scikit-learn."
-      },
-      {
-        id: "web-cloud",
-        name: "Web-Technologien und Cloud-Architekturen",
-        cp: "5 CP",
-        semester: "5./6. Sem.",
-        beschreibung: "Moderne Frontend-Frameworks, REST- und GraphQL-APIs, Cloud-Deployment auf AWS/Azure, CI/CD-Pipelines."
-      },
-      {
-        id: "db-advanced",
-        name: "Datenbanksysteme (Vertiefung)",
-        cp: "5 CP",
-        semester: "5./6. Sem.",
-        beschreibung: "Query-Optimierung, verteilte Datenbanken, NoSQL-Systeme (MongoDB, Redis), Datenbankdesign für Hochlastsysteme."
-      },
-      {
-        id: "it-sicherheit",
-        name: "IT-Sicherheit und Datenschutz",
-        cp: "5 CP",
-        semester: "5./6. Sem.",
-        beschreibung: "Angriffsvektoren und Gegenmaßnahmen, DSGVO-konforme Systementwicklung, Penetrationstests, Security by Design."
-      },
-      {
-        id: "agile-swe",
-        name: "Agile Softwareentwicklung",
-        cp: "5 CP",
-        semester: "5./6. Sem.",
-        beschreibung: "Scrum und Kanban in der Praxis, teambasiertes Semesterprojekt mit echtem Product Backlog, Retrospektiven und Demos."
-      },
-      {
-        id: "entrepreneurship",
-        name: "Entrepreneurship und Digitalisierung",
-        cp: "5 CP",
-        semester: "5./6. Sem.",
-        beschreibung: "Geschäftsmodelle für digitale Produkte, Lean Startup, MVP-Entwicklung, Pitching und Finanzierungsgrundlagen."
-      },
-      {
-        id: "softwarequalitaet",
-        name: "Softwarequalität und Testing",
-        cp: "5 CP",
-        semester: "5./6. Sem.",
-        beschreibung: "Teststrategie, TDD/BDD, automatisierte Tests, Code-Reviews, statische Analyse und kontinuierliche Qualitätssicherung."
-      },
-      {
-        id: "pm-it",
-        name: "Projektmanagement in der IT",
-        cp: "5 CP",
-        semester: "5./6. Sem.",
-        beschreibung: "Klassisches und agiles Projektmanagement, Risikoanalyse, Ressourcenplanung, Zertifizierungsgrundlagen (IPMA/PMP)."
-      }
-    ];
 
-    // Zustand: moduleId → Rang (1 | 2 | 3 | null)
-    const zustand = {};
-    MODULE.forEach(m => { zustand[m.id] = null; });
+<!-- ═══════════════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════════ -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+// ── Daten ─────────────────────────────────────────────────────────────────────
+const MODULE = [
+  { id: 'ml-ki',         name: 'Maschinelles Lernen und KI',               cp: '5 CP', sem: '5./6. Sem.', desc: 'Grundlagen überwachten und unüberwachten Lernens, neuronale Netze, Python/scikit-learn. Schwerpunkt auf praktischer Anwendung.'         },
+  { id: 'web-cloud',     name: 'Web-Technologien und Cloud-Architekturen',  cp: '5 CP', sem: '5./6. Sem.', desc: 'Moderne Frontend-Frameworks, REST- und GraphQL-APIs, Cloud-Deployment auf AWS/Azure, CI/CD-Pipelines.'                                 },
+  { id: 'db-adv',        name: 'Datenbanksysteme (Vertiefung)',             cp: '5 CP', sem: '5./6. Sem.', desc: 'Query-Optimierung, verteilte Datenbanken, NoSQL-Systeme (MongoDB, Redis), Datenbankdesign für Hochlastsysteme.'                        },
+  { id: 'it-sicherheit', name: 'IT-Sicherheit und Datenschutz',             cp: '5 CP', sem: '5./6. Sem.', desc: 'Angriffsvektoren und Gegenmaßnahmen, DSGVO-konforme Systementwicklung, Penetrationstests, Security by Design.'                        },
+  { id: 'agile-swe',     name: 'Agile Softwareentwicklung',                 cp: '5 CP', sem: '5./6. Sem.', desc: 'Scrum und Kanban in der Praxis, teambasiertes Semesterprojekt mit echtem Product Backlog, Retrospektiven und Demos.'                   },
+  { id: 'entrepr',       name: 'Entrepreneurship und Digitalisierung',      cp: '5 CP', sem: '5./6. Sem.', desc: 'Geschäftsmodelle für digitale Produkte, Lean Startup, MVP-Entwicklung, Pitching und Finanzierungsgrundlagen.'                          },
+  { id: 'swquality',     name: 'Softwarequalität und Testing',              cp: '5 CP', sem: '5./6. Sem.', desc: 'Teststrategie, TDD/BDD, automatisierte Tests, Code-Reviews, statische Analyse und kontinuierliche Qualitätssicherung.'                 },
+  { id: 'pm-it',         name: 'Projektmanagement in der IT',               cp: '5 CP', sem: '5./6. Sem.', desc: 'Klassisches und agiles Projektmanagement, Risikoanalyse, Ressourcenplanung, Zertifizierungsgrundlagen (IPMA/PMP).'                     },
+];
 
-    function modulMitRang(rang) {
-      return Object.entries(zustand).find(([, v]) => v === rang)?.[0] ?? null;
-    }
+const RANK_COLOR = { 1: '#E05A1C', 2: '#0070C0', 3: '#2E7D32' };
+const RANK_LABEL = { 1: 'Erstwunsch', 2: 'Zweitwunsch', 3: 'Drittwunsch' };
 
-    function rangZuweisen(modulId, rang) {
-      // R3: dasselbe Modul kann nicht zweimal gewählt werden —
-      // wenn der Rang bereits vergeben ist, Vorgänger freigeben
-      const vorgaenger = modulMitRang(rang);
-      if (vorgaenger && vorgaenger !== modulId) {
-        zustand[vorgaenger] = null;
-      }
-      // Toggle: nochmals klicken hebt die Auswahl auf
-      zustand[modulId] = zustand[modulId] === rang ? null : rang;
-      rendern();
-    }
+// ── State ─────────────────────────────────────────────────────────────────────
+const state = {};           // { [moduleId]: rank | null }
+MODULE.forEach(m => { state[m.id] = null; });
+let listBuilt = false;
 
-    function rendern() {
-      MODULE.forEach(m => karteAktualisieren(m));
-      zusammenfassungAktualisieren();
-      submitAktualisieren();
-    }
+// ── Login ─────────────────────────────────────────────────────────────────────
+function handleLogin(e) {
+  e.preventDefault();
+  const sNr  = document.getElementById('sNummer').value.trim();
+  const pass = document.getElementById('passwort').value;
+  const err  = document.getElementById('loginError');
 
-    function karteAktualisieren(m) {
-      const karte = document.getElementById("karte-" + m.id);
-      if (!karte) return;
-      const aktuellerRang = zustand[m.id];
-      karte.className = "modul-karte" + (aktuellerRang ? " rang-" + aktuellerRang : "");
-      [1, 2, 3].forEach(r => {
-        const btn = document.getElementById(`btn-${m.id}-${r}`);
-        btn.className = "rang-btn" + (aktuellerRang === r ? " aktiv-" + r : "");
-      });
-    }
+  // Validation: s-Nummer must look like s12345 or 12345
+  if (!sNr || !pass || !/^s?\d{3,}/i.test(sNr)) {
+    err.style.display = 'flex';
+    return;
+  }
 
-    function zusammenfassungAktualisieren() {
-      [1, 2, 3].forEach(rang => {
-        const id  = modulMitRang(rang);
-        const el  = document.getElementById("slot" + rang);
-        if (id) {
-          const m = MODULE.find(x => x.id === id);
-          el.textContent = m.name;
-          el.className = "slot-wert";
-        } else {
-          el.innerHTML = '<span class="slot-leer">nicht gewählt</span>';
-          el.className = "slot-wert";
-        }
-      });
-    }
+  err.style.display = 'none';
 
-    function submitAktualisieren() {
-      const vollstaendig = [1, 2, 3].every(r => modulMitRang(r) !== null);
-      document.getElementById("submitBtn").disabled = !vollstaendig;
-    }
+  const normalised = sNr.match(/^\d/) ? 's' + sNr : sNr.toLowerCase();
+  document.getElementById('userNameDisplay').textContent = normalised.toUpperCase();
+  document.getElementById('userSNrDisplay').textContent  = 'Wirtschaftsinformatik, 5. Sem.';
 
-    function kartenListeAufbauen() {
-      const liste = document.getElementById("modulListe");
-      MODULE.forEach(m => {
-        const karte = document.createElement("div");
-        karte.className = "modul-karte";
-        karte.id = "karte-" + m.id;
-        karte.innerHTML = `
-          <div class="modul-kopf">
-            <div class="modul-name">${m.name}</div>
-            <div class="rang-buttons">
-              <button class="rang-btn" id="btn-${m.id}-1"
-                onclick="rangZuweisen('${m.id}', 1)"
-                title="Als Erstwunsch wählen">1</button>
-              <button class="rang-btn" id="btn-${m.id}-2"
-                onclick="rangZuweisen('${m.id}', 2)"
-                title="Als Zweitwunsch wählen">2</button>
-              <button class="rang-btn" id="btn-${m.id}-3"
-                onclick="rangZuweisen('${m.id}', 3)"
-                title="Als Drittwunsch wählen">3</button>
-            </div>
+  // Switch screens
+  document.getElementById('screen-login').style.display      = 'none';
+  document.getElementById('screen-enrollment').style.display = 'flex';
+
+  if (!listBuilt) { buildList(); listBuilt = true; }
+  lucide.createIcons();
+}
+
+function handleLogout() {
+  document.getElementById('screen-enrollment').style.display = 'none';
+  document.getElementById('screen-login').style.display      = 'flex';
+  document.getElementById('sNummer').value  = '';
+  document.getElementById('passwort').value = '';
+}
+
+function togglePwVisibility() {
+  const input = document.getElementById('passwort');
+  const icon  = document.getElementById('eyeIcon');
+  const show  = input.type === 'password';
+  input.type  = show ? 'text' : 'password';
+  icon.setAttribute('data-lucide', show ? 'eye-off' : 'eye');
+  lucide.createIcons();
+}
+
+// ── Build module list ─────────────────────────────────────────────────────────
+function buildList() {
+  const container = document.getElementById('moduleList');
+  MODULE.forEach(m => {
+    const el = document.createElement('div');
+    el.id        = 'card-' + m.id;
+    el.className = 'bg-white border border-l-[3px] border-htw-border rounded-lg px-4 py-3.5 ' +
+                   'transition-shadow duration-150 hover:shadow-soft';
+    el.style.borderLeftColor = 'transparent';
+
+    el.innerHTML = `
+      <div class="flex items-start gap-3">
+
+        <!-- Module info -->
+        <div class="flex-1 min-w-0">
+          <div class="text-[14px] font-semibold leading-snug mb-1.5">${m.name}</div>
+          <div class="flex items-center gap-3 text-[11px] text-htw-text-soft mb-2">
+            <span class="flex items-center gap-1">
+              <i data-lucide="book-open" class="w-3 h-3"></i>${m.cp}
+            </span>
+            <span class="flex items-center gap-1">
+              <i data-lucide="clock" class="w-3 h-3"></i>${m.sem}
+            </span>
           </div>
-          <div class="modul-meta">
-            <span>${m.cp}</span>
-            <span>${m.semester}</span>
-          </div>
-          <div class="modul-beschreibung">${m.beschreibung}</div>
-        `;
-        liste.appendChild(karte);
-      });
+          <div class="text-[12px] text-htw-text-soft leading-relaxed">${m.desc}</div>
+        </div>
+
+        <!-- Rank buttons -->
+        <div class="flex flex-col gap-1.5 flex-shrink-0 pt-0.5">
+          ${[1,2,3].map(r => `
+            <button
+              id="btn-${m.id}-${r}"
+              onclick="assign('${m.id}', ${r})"
+              title="${RANK_LABEL[r]} wählen"
+              class="rank-btn w-8 h-8 rounded-full border-2 border-htw-border bg-htw-bg
+                     text-[12px] font-bold text-htw-text-soft
+                     hover:border-htw-border-strong transition-all flex items-center justify-center"
+            >${r}</button>
+          `).join('')}
+        </div>
+
+      </div>
+    `;
+    container.appendChild(el);
+  });
+  lucide.createIcons();
+}
+
+// ── Assign rank ───────────────────────────────────────────────────────────────
+function assign(moduleId, rank) {
+  // R3: free the previous holder of this rank
+  const prev = byRank(rank);
+  if (prev && prev !== moduleId) state[prev] = null;
+  // Toggle
+  state[moduleId] = state[moduleId] === rank ? null : rank;
+  render();
+}
+
+function byRank(r) {
+  return Object.entries(state).find(([, v]) => v === r)?.[0] ?? null;
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function render() {
+  MODULE.forEach(updateCard);
+  updateSlots();
+  updateMotivation();
+  updateSubmit();
+}
+
+function updateCard(m) {
+  const card = document.getElementById('card-' + m.id);
+  if (!card) return;
+  const rank = state[m.id];
+  card.style.borderLeftColor = rank ? RANK_COLOR[rank] : 'transparent';
+
+  [1,2,3].forEach(r => {
+    const btn = document.getElementById(`btn-${m.id}-${r}`);
+    if (!btn) return;
+    // Reset
+    btn.className = 'rank-btn w-8 h-8 rounded-full border-2 border-htw-border bg-htw-bg ' +
+                    'text-[12px] font-bold text-htw-text-soft ' +
+                    'hover:border-htw-border-strong transition-all flex items-center justify-center';
+    btn.style.background   = '';
+    btn.style.borderColor  = '';
+    btn.style.color        = '';
+    if (rank === r) {
+      btn.style.background  = RANK_COLOR[r];
+      btn.style.borderColor = RANK_COLOR[r];
+      btn.style.color       = 'white';
     }
+  });
+}
 
-    document.getElementById("submitBtn").addEventListener("click", () => {
-      const msg = document.getElementById("valMsg");
-
-      // R1: Genau 3 Module
-      const anzahl = Object.values(zustand).filter(v => v !== null).length;
-      if (anzahl < 3) {
-        msg.textContent = "Bitte wähle genau drei Module aus (Platz 1, 2 und 3).";
-        msg.style.display = "block";
-        return;
-      }
-
-      msg.style.display = "none";
-      bestaetigungZeigen();
-    });
-
-    function bestaetigungZeigen() {
-      const liste     = document.getElementById("bestListe");
-      const badgeColors = { 1: "var(--rot)", 2: "var(--blau)", 3: "var(--gruen)" };
-      const rangLabels  = { 1: "Erstwunsch", 2: "Zweitwunsch", 3: "Drittwunsch" };
-
-      liste.innerHTML = [1, 2, 3].map(rang => {
-        const id = modulMitRang(rang);
-        const m  = MODULE.find(x => x.id === id);
-        return `
-          <div class="best-zeile">
-            <div class="best-badge" style="background:${badgeColors[rang]}">${rang}</div>
-            <div>
-              <div class="best-modul">${m.name}</div>
-              <div class="best-rang">${rangLabels[rang]}</div>
-            </div>
-          </div>`;
-      }).join("");
-
-      const jetzt = new Date();
-      document.getElementById("bestZeitstempel").textContent =
-        "Eingegangen am " +
-        jetzt.toLocaleDateString("de-DE", { day: "2-digit", month: "long", year: "numeric" }) +
-        " um " +
-        jetzt.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) +
-        " Uhr";
-
-      document.getElementById("overlay").classList.add("sichtbar");
+function updateSlots() {
+  [1,2,3].forEach(r => {
+    const id  = byRank(r);
+    const el  = document.getElementById('slot' + r);
+    if (id) {
+      const m   = MODULE.find(x => x.id === id);
+      el.textContent  = m.name;
+      el.style.color  = '';
+    } else {
+      el.innerHTML = '<span class="text-htw-text-soft/50 italic font-normal">nicht gewählt</span>';
     }
+  });
+}
 
-    function overlaySchliessen() {
-      document.getElementById("overlay").classList.remove("sichtbar");
+function updateMotivation() {
+  const erstId  = byRank(1);
+  const section = document.getElementById('motivationSection');
+  const wasHidden = section.style.display === 'none';
+
+  if (erstId) {
+    const m = MODULE.find(x => x.id === erstId);
+    document.getElementById('motivModulName').textContent = m.name;
+    if (wasHidden) {
+      section.style.display = 'block';
+      section.classList.remove('slide-down');
+      void section.offsetWidth;        // force reflow for animation replay
+      section.classList.add('slide-down');
     }
+    lucide.createIcons();
+  } else {
+    section.style.display = 'none';
+    document.getElementById('motivationText').value = '';
+    document.getElementById('charCount').textContent = '0 / 500';
+  }
+}
 
-    // Init
-    kartenListeAufbauen();
-    rendern();
-  </script>
+function updateSubmit() {
+  const full = [1,2,3].every(r => byRank(r) !== null);
+  document.getElementById('submitBtn').disabled = !full;
+}
+
+function onMotivInput() {
+  const len  = document.getElementById('motivationText').value.length;
+  const el   = document.getElementById('charCount');
+  el.textContent = len + ' / 500';
+  el.style.color = len > 450 ? '#E05A1C' : '';
+  el.style.fontWeight = len > 450 ? '600' : '';
+}
+
+// ── Submit ────────────────────────────────────────────────────────────────────
+function handleSubmit() {
+  const valMsg = document.getElementById('valMsg');
+
+  if (![1,2,3].every(r => byRank(r) !== null)) {
+    valMsg.textContent    = 'Bitte vergib Priorität 1, 2 und 3 für je ein Modul.';
+    valMsg.style.display  = 'block';
+    return;
+  }
+
+  valMsg.style.display = 'none';
+  showConfirmation();
+}
+
+function showConfirmation() {
+  const motivation = document.getElementById('motivationText').value.trim();
+  const list = document.getElementById('confirmList');
+
+  list.innerHTML = [1,2,3].map(r => {
+    const m     = MODULE.find(x => x.id === byRank(r));
+    const extra = r === 1 && motivation
+      ? `<div class="mt-1.5 text-[11px] text-htw-text-soft leading-relaxed italic">"${motivation.slice(0,180)}${motivation.length > 180 ? '…' : ''}"</div>`
+      : '';
+    return `
+      <div class="flex items-start gap-3">
+        <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+             style="background:${RANK_COLOR[r]}">
+          <span class="text-white text-[11px] font-bold">${r}</span>
+        </div>
+        <div class="flex-1">
+          <div class="text-[13px] font-medium leading-snug">${m.name}</div>
+          <div class="text-[10px] text-htw-text-soft uppercase tracking-[0.06em] mt-0.5">${RANK_LABEL[r]}</div>
+          ${extra}
+        </div>
+      </div>`;
+  }).join('');
+
+  const now = new Date();
+  document.getElementById('confirmTs').textContent =
+    'Eingegangen am ' +
+    now.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' }) +
+    ' um ' +
+    now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+
+  document.getElementById('overlay').style.display = 'flex';
+  lucide.createIcons();
+}
+
+function closeOverlay() {
+  document.getElementById('overlay').style.display = 'none';
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+</script>
 </body>
 </html>
