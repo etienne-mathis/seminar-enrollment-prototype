@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wahlpflichtmodul-Einschreibung — HTW Dresden</title>
+  <style>
+    :root {
+      --rot:        #CC0000;
+      --rot-dark:   #A30000;
+      --blau:       #0070C0;
+      --gruen:      #107C10;
+      --text:       #1a1a1a;
+      --text-soft:  #555;
+      --border:     #ddd;
+      --bg:         #f5f5f5;
+      --white:      #ffffff;
+      --radius:     6px;
+      --shadow:     0 1px 3px rgba(0,0,0,0.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ─── Header ─────────────────────────────── */
+    header {
+      background: var(--rot);
+      color: white;
+    }
+
+    .header-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      border-right: 2px solid rgba(255,255,255,0.35);
+      padding-right: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .logo span { font-weight: 300; }
+
+    .header-subtitle {
+      font-size: 14px;
+      font-weight: 400;
+      opacity: 0.92;
+    }
+
+    /* ─── Fristleiste ───────────────────────── */
+    .fristleiste {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .fristleiste-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 9px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .frist-indikator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #2e7d32;
+      flex-shrink: 0;
+    }
+
+    /* ─── Hauptlayout ───────────────────────── */
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 28px 24px 48px;
+      display: grid;
+      grid-template-columns: 1fr 310px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .kap-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+      margin-bottom: 12px;
+    }
+
+    /* ─── Modul-Karten ──────────────────────── */
+    .modul-liste {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modul-karte {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 3px solid transparent;
+      border-radius: var(--radius);
+      padding: 15px 16px;
+      transition: border-color 0.12s, box-shadow 0.12s;
+    }
+
+    .modul-karte:hover {
+      box-shadow: var(--shadow);
+    }
+
+    .modul-karte.rang-1 { border-left-color: var(--rot); }
+    .modul-karte.rang-2 { border-left-color: var(--blau); }
+    .modul-karte.rang-3 { border-left-color: var(--gruen); }
+
+    .modul-kopf {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .modul-name {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .modul-meta {
+      display: flex;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 7px;
+    }
+
+    .modul-beschreibung {
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    /* ─── Prioritäts-Buttons ────────────────── */
+    .rang-buttons {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .rang-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+      transition: border-color 0.1s, background 0.1s, color 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .rang-btn:hover { border-color: #aaa; }
+    .rang-btn.aktiv-1 { background: var(--rot);  border-color: var(--rot);  color: white; }
+    .rang-btn.aktiv-2 { background: var(--blau); border-color: var(--blau); color: white; }
+    .rang-btn.aktiv-3 { background: var(--gruen); border-color: var(--gruen); color: white; }
+
+    /* ─── Zusammenfassung ────────────────────── */
+    .zusammenfassung {
+      position: sticky;
+      top: 24px;
+    }
+
+    .zusammenfassung-karte {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .zsf-kopf {
+      background: var(--rot);
+      color: white;
+      padding: 13px 18px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .zsf-koerper {
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .zsf-slot {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slot-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .slot-badge-1 { background: var(--rot);  }
+    .slot-badge-2 { background: var(--blau); }
+    .slot-badge-3 { background: var(--gruen); }
+
+    .slot-inhalt { flex: 1; min-width: 0; }
+
+    .slot-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-soft);
+      margin-bottom: 1px;
+    }
+
+    .slot-wert {
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .slot-leer {
+      color: #bbb;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .zsf-fuss {
+      border-top: 1px solid var(--border);
+      padding: 14px 18px;
+    }
+
+    .btn-einschreiben {
+      width: 100%;
+      padding: 11px;
+      background: var(--rot);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .btn-einschreiben:hover:not(:disabled) { background: var(--rot-dark); }
+
+    .btn-einschreiben:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .validierungsmeldung {
+      display: none;
+      font-size: 12px;
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 4px;
+    }
+
+    .validierungsmeldung.fehler {
+      background: #fff0f0;
+      color: var(--rot);
+      border: 1px solid #f5c6c6;
+    }
+
+    /* ─── Bestätigungs-Overlay ──────────────── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .overlay.sichtbar { display: flex; }
+
+    .bestaetigung-box {
+      background: white;
+      border-radius: 10px;
+      padding: 32px 28px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .best-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: #e8f5e9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: #2e7d32;
+    }
+
+    .best-titel {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .best-text {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .best-liste {
+      text-align: left;
+      background: var(--bg);
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .best-zeile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .best-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .best-modul { font-size: 13px; font-weight: 500; }
+    .best-rang  { font-size: 11px; color: var(--text-soft); }
+
+    .best-zeitstempel {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 22px;
+    }
+
+    .btn-schliessen {
+      padding: 10px 32px;
+      background: var(--rot);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .btn-schliessen:hover { background: var(--rot-dark); }
+
+    /* ─── Responsive ────────────────────────── */
+    @media (max-width: 700px) {
+      main {
+        grid-template-columns: 1fr;
+        padding: 16px 14px 40px;
+        gap: 20px;
+      }
+
+      .zusammenfassung {
+        position: static;
+        order: -1;
+      }
+
+      .header-inner { gap: 12px; }
+      .logo { font-size: 17px; padding-right: 14px; }
+      .header-subtitle { font-size: 13px; }
+
+      .rang-btn { width: 42px; height: 42px; font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">HTW <span>|</span> Dresden</div>
+      <div class="header-subtitle">Wahlpflichtmodul-Einschreibung — Wintersemester 2026/27</div>
+    </div>
+  </header>
+
+  <div class="fristleiste">
+    <div class="fristleiste-inner">
+      <div class="frist-indikator"></div>
+      Anmeldefrist läuft: <strong style="color: var(--text); margin: 0 2px;">30. November 2026, 23:59 Uhr</strong>
+      &nbsp;·&nbsp; Änderungen bis zum Fristende jederzeit möglich
+    </div>
+  </div>
+
+  <main>
+    <div>
+      <div class="kap-label">Verfügbare Module — Platz 1, 2 oder 3 vergeben</div>
+      <div class="modul-liste" id="modulListe"></div>
+    </div>
+
+    <div class="zusammenfassung">
+      <div class="zusammenfassung-karte">
+        <div class="zsf-kopf">Deine Auswahl</div>
+        <div class="zsf-koerper">
+          <div class="zsf-slot">
+            <div class="slot-badge slot-badge-1">1</div>
+            <div class="slot-inhalt">
+              <div class="slot-label">Erstwunsch</div>
+              <div class="slot-wert" id="slot1"><span class="slot-leer">nicht gewählt</span></div>
+            </div>
+          </div>
+          <div class="zsf-slot">
+            <div class="slot-badge slot-badge-2">2</div>
+            <div class="slot-inhalt">
+              <div class="slot-label">Zweitwunsch</div>
+              <div class="slot-wert" id="slot2"><span class="slot-leer">nicht gewählt</span></div>
+            </div>
+          </div>
+          <div class="zsf-slot">
+            <div class="slot-badge slot-badge-3">3</div>
+            <div class="slot-inhalt">
+              <div class="slot-label">Drittwunsch</div>
+              <div class="slot-wert" id="slot3"><span class="slot-leer">nicht gewählt</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="zsf-fuss">
+          <button class="btn-einschreiben" id="submitBtn" disabled>Einschreibung abschicken</button>
+          <div class="validierungsmeldung fehler" id="valMsg"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="overlay" id="overlay">
+    <div class="bestaetigung-box">
+      <div class="best-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <div class="best-titel">Einschreibung eingegangen</div>
+      <div class="best-text">
+        Deine Modulwahl wurde erfolgreich gespeichert.<br>
+        Du kannst sie bis zum Fristende jederzeit ändern.
+      </div>
+      <div class="best-liste" id="bestListe"></div>
+      <div class="best-zeitstempel" id="bestZeitstempel"></div>
+      <button class="btn-schliessen" onclick="overlaySchliessen()">Schließen</button>
+    </div>
+  </div>
+
+  <script>
+    const MODULE = [
+      {
+        id: "ml-ki",
+        name: "Maschinelles Lernen und KI",
+        cp: "5 CP",
+        semester: "5./6. Sem.",
+        beschreibung: "Grundlagen des überwachten und unüberwachten Lernens, neuronale Netze, praktische Umsetzung mit Python und scikit-learn."
+      },
+      {
+        id: "web-cloud",
+        name: "Web-Technologien und Cloud-Architekturen",
+        cp: "5 CP",
+        semester: "5./6. Sem.",
+        beschreibung: "Moderne Frontend-Frameworks, REST- und GraphQL-APIs, Cloud-Deployment auf AWS/Azure, CI/CD-Pipelines."
+      },
+      {
+        id: "db-advanced",
+        name: "Datenbanksysteme (Vertiefung)",
+        cp: "5 CP",
+        semester: "5./6. Sem.",
+        beschreibung: "Query-Optimierung, verteilte Datenbanken, NoSQL-Systeme (MongoDB, Redis), Datenbankdesign für Hochlastsysteme."
+      },
+      {
+        id: "it-sicherheit",
+        name: "IT-Sicherheit und Datenschutz",
+        cp: "5 CP",
+        semester: "5./6. Sem.",
+        beschreibung: "Angriffsvektoren und Gegenmaßnahmen, DSGVO-konforme Systementwicklung, Penetrationstests, Security by Design."
+      },
+      {
+        id: "agile-swe",
+        name: "Agile Softwareentwicklung",
+        cp: "5 CP",
+        semester: "5./6. Sem.",
+        beschreibung: "Scrum und Kanban in der Praxis, teambasiertes Semesterprojekt mit echtem Product Backlog, Retrospektiven und Demos."
+      },
+      {
+        id: "entrepreneurship",
+        name: "Entrepreneurship und Digitalisierung",
+        cp: "5 CP",
+        semester: "5./6. Sem.",
+        beschreibung: "Geschäftsmodelle für digitale Produkte, Lean Startup, MVP-Entwicklung, Pitching und Finanzierungsgrundlagen."
+      },
+      {
+        id: "softwarequalitaet",
+        name: "Softwarequalität und Testing",
+        cp: "5 CP",
+        semester: "5./6. Sem.",
+        beschreibung: "Teststrategie, TDD/BDD, automatisierte Tests, Code-Reviews, statische Analyse und kontinuierliche Qualitätssicherung."
+      },
+      {
+        id: "pm-it",
+        name: "Projektmanagement in der IT",
+        cp: "5 CP",
+        semester: "5./6. Sem.",
+        beschreibung: "Klassisches und agiles Projektmanagement, Risikoanalyse, Ressourcenplanung, Zertifizierungsgrundlagen (IPMA/PMP)."
+      }
+    ];
+
+    // Zustand: moduleId → Rang (1 | 2 | 3 | null)
+    const zustand = {};
+    MODULE.forEach(m => { zustand[m.id] = null; });
+
+    function modulMitRang(rang) {
+      return Object.entries(zustand).find(([, v]) => v === rang)?.[0] ?? null;
+    }
+
+    function rangZuweisen(modulId, rang) {
+      // R3: dasselbe Modul kann nicht zweimal gewählt werden —
+      // wenn der Rang bereits vergeben ist, Vorgänger freigeben
+      const vorgaenger = modulMitRang(rang);
+      if (vorgaenger && vorgaenger !== modulId) {
+        zustand[vorgaenger] = null;
+      }
+      // Toggle: nochmals klicken hebt die Auswahl auf
+      zustand[modulId] = zustand[modulId] === rang ? null : rang;
+      rendern();
+    }
+
+    function rendern() {
+      MODULE.forEach(m => karteAktualisieren(m));
+      zusammenfassungAktualisieren();
+      submitAktualisieren();
+    }
+
+    function karteAktualisieren(m) {
+      const karte = document.getElementById("karte-" + m.id);
+      if (!karte) return;
+      const aktuellerRang = zustand[m.id];
+      karte.className = "modul-karte" + (aktuellerRang ? " rang-" + aktuellerRang : "");
+      [1, 2, 3].forEach(r => {
+        const btn = document.getElementById(`btn-${m.id}-${r}`);
+        btn.className = "rang-btn" + (aktuellerRang === r ? " aktiv-" + r : "");
+      });
+    }
+
+    function zusammenfassungAktualisieren() {
+      [1, 2, 3].forEach(rang => {
+        const id  = modulMitRang(rang);
+        const el  = document.getElementById("slot" + rang);
+        if (id) {
+          const m = MODULE.find(x => x.id === id);
+          el.textContent = m.name;
+          el.className = "slot-wert";
+        } else {
+          el.innerHTML = '<span class="slot-leer">nicht gewählt</span>';
+          el.className = "slot-wert";
+        }
+      });
+    }
+
+    function submitAktualisieren() {
+      const vollstaendig = [1, 2, 3].every(r => modulMitRang(r) !== null);
+      document.getElementById("submitBtn").disabled = !vollstaendig;
+    }
+
+    function kartenListeAufbauen() {
+      const liste = document.getElementById("modulListe");
+      MODULE.forEach(m => {
+        const karte = document.createElement("div");
+        karte.className = "modul-karte";
+        karte.id = "karte-" + m.id;
+        karte.innerHTML = `
+          <div class="modul-kopf">
+            <div class="modul-name">${m.name}</div>
+            <div class="rang-buttons">
+              <button class="rang-btn" id="btn-${m.id}-1"
+                onclick="rangZuweisen('${m.id}', 1)"
+                title="Als Erstwunsch wählen">1</button>
+              <button class="rang-btn" id="btn-${m.id}-2"
+                onclick="rangZuweisen('${m.id}', 2)"
+                title="Als Zweitwunsch wählen">2</button>
+              <button class="rang-btn" id="btn-${m.id}-3"
+                onclick="rangZuweisen('${m.id}', 3)"
+                title="Als Drittwunsch wählen">3</button>
+            </div>
+          </div>
+          <div class="modul-meta">
+            <span>${m.cp}</span>
+            <span>${m.semester}</span>
+          </div>
+          <div class="modul-beschreibung">${m.beschreibung}</div>
+        `;
+        liste.appendChild(karte);
+      });
+    }
+
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      const msg = document.getElementById("valMsg");
+
+      // R1: Genau 3 Module
+      const anzahl = Object.values(zustand).filter(v => v !== null).length;
+      if (anzahl < 3) {
+        msg.textContent = "Bitte wähle genau drei Module aus (Platz 1, 2 und 3).";
+        msg.style.display = "block";
+        return;
+      }
+
+      msg.style.display = "none";
+      bestaetigungZeigen();
+    });
+
+    function bestaetigungZeigen() {
+      const liste     = document.getElementById("bestListe");
+      const badgeColors = { 1: "var(--rot)", 2: "var(--blau)", 3: "var(--gruen)" };
+      const rangLabels  = { 1: "Erstwunsch", 2: "Zweitwunsch", 3: "Drittwunsch" };
+
+      liste.innerHTML = [1, 2, 3].map(rang => {
+        const id = modulMitRang(rang);
+        const m  = MODULE.find(x => x.id === id);
+        return `
+          <div class="best-zeile">
+            <div class="best-badge" style="background:${badgeColors[rang]}">${rang}</div>
+            <div>
+              <div class="best-modul">${m.name}</div>
+              <div class="best-rang">${rangLabels[rang]}</div>
+            </div>
+          </div>`;
+      }).join("");
+
+      const jetzt = new Date();
+      document.getElementById("bestZeitstempel").textContent =
+        "Eingegangen am " +
+        jetzt.toLocaleDateString("de-DE", { day: "2-digit", month: "long", year: "numeric" }) +
+        " um " +
+        jetzt.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) +
+        " Uhr";
+
+      document.getElementById("overlay").classList.add("sichtbar");
+    }
+
+    function overlaySchliessen() {
+      document.getElementById("overlay").classList.remove("sichtbar");
+    }
+
+    // Init
+    kartenListeAufbauen();
+    rendern();
+  </script>
+</body>
+</html>
