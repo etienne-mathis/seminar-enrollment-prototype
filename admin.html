@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Modulzuordnungen WS 2026/27 · HTW Dresden</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --orange:       #E05A1C;
+      --orange-dark:  #C44E18;
+      --dark:         #1D1D1B;
+      --surface:      #FFFFFF;
+      --bg:           #F0F0F0;
+      --border:       #C2C2C2;
+      --border-light: #E0E0E0;
+      --text:         #1D1D1B;
+      --soft:         #5C5C5C;
+      --muted:        #9A9A9A;
+      --r1:           #E05A1C;
+      --r2:           #B84818;
+      --r3:           #8C3610;
+      --success:      #217A3C;
+      --success-bg:   #F0F7F2;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      -webkit-font-smoothing: antialiased; min-height: 100vh;
+    }
+
+    :focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+
+    /* Header */
+    .admin-header {
+      background: var(--dark); border-bottom: 3px solid var(--orange);
+      position: sticky; top: 0; z-index: 20;
+    }
+    .admin-header-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px; height: 54px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .header-brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .header-logo-box {
+      width: 34px; height: 34px; background: var(--orange);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .header-logo-box span { color: #fff; font-size: 9px; font-weight: 700; letter-spacing: .05em; }
+    .header-sep { width: 1px; height: 24px; background: rgba(255,255,255,.15); flex-shrink: 0; }
+    .header-ctx-title { font-size: 13px; font-weight: 600; color: #fff; }
+    .header-ctx-meta {
+      font-size: 10px; color: rgba(255,255,255,.4);
+      text-transform: uppercase; letter-spacing: .08em; margin-top: 1px;
+    }
+
+    .admin-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 9px;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+      font-size: 10px; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: rgba(255,255,255,.75);
+    }
+    .admin-badge-dot {
+      width: 5px; height: 5px; background: var(--orange); border-radius: 50%;
+    }
+
+    .header-nav a {
+      font-size: 11px; color: rgba(255,255,255,.55); text-decoration: none;
+      display: flex; align-items: center; gap: 5px;
+      transition: color .12s;
+    }
+    .header-nav a:hover { color: rgba(255,255,255,.85); }
+
+    /* Fristleiste */
+    .frist-bar { background: var(--surface); border-bottom: 1px solid var(--border-light); }
+    .frist-bar-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 7px 24px;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px; color: var(--soft);
+    }
+    .frist-dot { width: 7px; height: 7px; background: #22a349; flex-shrink: 0; }
+
+    /* Main */
+    .admin-main {
+      max-width: 1200px; margin: 0 auto;
+      padding: 28px 24px 80px;
+    }
+
+    /* Section */
+    .section { margin-bottom: 36px; }
+    .section-label {
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .14em; color: var(--muted);
+      margin-bottom: 10px; padding-bottom: 7px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    /* KPI-Karten */
+    .kpi-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    @media (max-width: 700px) { .kpi-row { grid-template-columns: 1fr; } }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border); border-top: 2px solid var(--dark);
+      padding: 18px 20px;
+    }
+    .kpi-label {
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .kpi-value {
+      font-size: 32px; font-weight: 700;
+      letter-spacing: -.03em; line-height: 1;
+      color: var(--dark);
+    }
+    .kpi-value.orange { color: var(--orange); }
+    .kpi-sub { font-size: 12px; color: var(--soft); margin-top: 5px; }
+
+    /* Rang-Verteilung in KPI */
+    .rank-dist { display: flex; gap: 10px; margin-top: 12px; }
+    .rank-dist-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+    .rank-dist-dot { width: 10px; height: 10px; flex-shrink: 0; }
+    .rank-dist-dot.r1 { background: var(--r1); }
+    .rank-dist-dot.r2 { background: var(--r2); }
+    .rank-dist-dot.r3 { background: var(--r3); }
+
+    /* Balken */
+    .bar-wrap { margin-top: 12px; }
+    .bar-track {
+      height: 6px; background: var(--border-light);
+      display: flex; overflow: hidden;
+    }
+    .bar-seg { height: 100%; transition: width .3s; }
+    .bar-seg.r1 { background: var(--r1); }
+    .bar-seg.r2 { background: var(--r2); }
+    .bar-seg.r3 { background: var(--r3); }
+
+    /* Modul-Übersichts-Tabelle */
+    .data-table {
+      background: var(--surface);
+      border: 1px solid var(--border); border-top: 2px solid var(--dark);
+      width: 100%; border-collapse: collapse;
+    }
+    .data-table th {
+      text-align: left; padding: 10px 16px;
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
+      background: #F8F8F8; border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 13px 16px; font-size: 13px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #FAFAFA; }
+
+    /* Auslastungs-Balken in Tabelle */
+    .auslastung-wrap {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .auslastung-bar {
+      flex: 1; height: 5px; background: var(--border-light); min-width: 60px;
+    }
+    .auslastung-fill { height: 100%; background: var(--orange); }
+    .auslastung-fill.voll { background: var(--r2); }
+    .auslastung-pct {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; color: var(--soft); flex-shrink: 0; min-width: 32px;
+    }
+
+    /* Rang-Chips in Tabelle */
+    .rang-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+    .rang-chip {
+      display: flex; align-items: center; gap: 4px;
+      padding: 2px 7px; font-size: 11px;
+      border: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+    .rang-chip-dot { width: 6px; height: 6px; }
+    .rang-chip-dot.r1 { background: var(--r1); }
+    .rang-chip-dot.r2 { background: var(--r2); }
+    .rang-chip-dot.r3 { background: var(--r3); }
+
+    /* Rank-Badge */
+    .rank-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0;
+    }
+    .rank-badge.r1 { background: var(--r1); }
+    .rank-badge.r2 { background: var(--r2); }
+    .rank-badge.r3 { background: var(--r3); }
+
+    /* Status-Chip */
+    .status-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 2px 8px; font-size: 11px; font-weight: 500;
+    }
+    .status-chip.ok   { background: var(--success-bg); color: var(--success); }
+    .status-chip.warn { background: #FEF0E8; color: var(--orange); }
+    .status-chip-dot  { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+    /* Modulname in Tabelle */
+    .modul-name-cell { font-weight: 600; }
+    .modul-id-cell {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; color: var(--muted);
+    }
+
+    /* Pagination-Hinweis */
+    .table-footer {
+      background: #F8F8F8;
+      border-top: 1px solid var(--border-light);
+      padding: 10px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 11px; color: var(--muted);
+    }
+
+    /* Info-Banner */
+    .algo-banner {
+      background: var(--surface);
+      border: 1px solid var(--border); border-left: 3px solid var(--orange);
+      padding: 14px 18px; margin-bottom: 28px;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .algo-banner svg { flex-shrink: 0; color: var(--orange); margin-top: 1px; }
+    .algo-banner-text { font-size: 13px; color: var(--soft); line-height: 1.6; }
+    .algo-banner-text strong { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .admin-main { padding: 20px 16px 60px; }
+      .data-table th:nth-child(5),
+      .data-table td:nth-child(5) { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="admin-header">
+  <div class="admin-header-inner">
+    <div class="header-brand">
+      <div class="header-logo-box"><span>HTW</span></div>
+      <div class="header-sep"></div>
+      <div class="header-ctx">
+        <div class="header-ctx-title">Modulzuordnungen — Algorithmus-Ergebnis</div>
+        <div class="header-ctx-meta">WS&nbsp;2026/27 · Wirtschaftsinformatik</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div class="admin-badge">
+        <div class="admin-badge-dot"></div>
+        Admin
+      </div>
+      <div class="header-nav">
+        <a href="index.html">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          Studenten-Portal
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="frist-bar">
+  <div class="frist-bar-inner">
+    <div class="frist-dot"></div>
+    <span>Einschreibefrist aktiv bis <strong>30. November 2026, 23:59 Uhr</strong>
+          &nbsp;·&nbsp; Algorithmus-Lauf: <strong>01. Dezember 2026, 00:15 Uhr</strong>
+          &nbsp;·&nbsp; Zuordnung finalisiert</span>
+  </div>
+</div>
+
+<main class="admin-main">
+
+  <!-- Algorithmus-Info -->
+  <div class="algo-banner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <div class="algo-banner-text">
+      <strong>Zuordnungsalgorithmus</strong> — Jeder Student wird dem Modul zugewiesen, das er als Erstwunsch angegeben hat. Ist das Modul belegt, greift der Zweitwunsch, danach der Drittwunsch. Bei Gleichstand innerhalb eines Moduls entscheidet der Einschreibezeitpunkt. Die Ergebnisse dieser Ansicht basieren auf <strong>Mockdaten</strong> (22 Einschreibungen).
+    </div>
+  </div>
+
+  <!-- KPI-Karten -->
+  <div class="section">
+    <div class="section-label">Übersicht</div>
+    <div class="kpi-row">
+
+      <div class="kpi-card">
+        <div class="kpi-label">Einschreibungen gesamt</div>
+        <div class="kpi-value">22</div>
+        <div class="kpi-sub">von 24 Studierenden im Kurs</div>
+        <div class="bar-wrap" style="margin-top:14px">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px">Auslastung Kurs</div>
+          <div class="bar-track">
+            <div class="bar-seg r1" style="width:91.6%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Erstwunsch-Quote</div>
+        <div class="kpi-value orange">82&thinsp;%</div>
+        <div class="kpi-sub">18 von 22 Studierenden</div>
+        <div class="rank-dist">
+          <div class="rank-dist-item">
+            <div class="rank-dist-dot r1"></div>
+            <span>18 × Rang&nbsp;1</span>
+          </div>
+          <div class="rank-dist-item">
+            <div class="rank-dist-dot r2"></div>
+            <span>3 × Rang&nbsp;2</span>
+          </div>
+          <div class="rank-dist-item">
+            <div class="rank-dist-dot r3"></div>
+            <span>1 × Rang&nbsp;3</span>
+          </div>
+        </div>
+        <div class="bar-wrap" style="margin-top:10px">
+          <div class="bar-track">
+            <div class="bar-seg r1" style="width:81.8%"></div>
+            <div class="bar-seg r2" style="width:13.6%"></div>
+            <div class="bar-seg r3" style="width:4.5%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Aktive Module</div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-sub">alle 8 Module belegt</div>
+        <div style="margin-top:14px">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px">Kapazität gesamt</div>
+          <div style="font-size:13px;font-weight:600;">22 / 80 Plätze belegt</div>
+          <div style="font-size:11px;color:var(--muted);">10 Plätze je Modul</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modul-Übersicht -->
+  <div class="section">
+    <div class="section-label">Modulauslastung & Rang-Verteilung</div>
+    <table class="data-table" style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th>Modul</th>
+          <th style="width:90px;text-align:center;">Eingeschr.</th>
+          <th style="width:90px;text-align:center;">Kapazität</th>
+          <th style="width:180px;">Auslastung</th>
+          <th>Rang-Verteilung</th>
+        </tr>
+      </thead>
+      <tbody id="modulTableBody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5" style="padding:0">
+            <div class="table-footer">
+              <span>8 Module · 22 Zuordnungen gesamt</span>
+              <span>Einschreibeschluss 30.11.2026</span>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Einzelzuordnungen -->
+  <div class="section">
+    <div class="section-label">Individuelle Zuordnungen</div>
+    <table class="data-table" style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th style="width:100px">s-Nummer</th>
+          <th>Erstwunsch</th>
+          <th>Zweitwunsch</th>
+          <th>Drittwunsch</th>
+          <th style="width:160px">Zugewiesen</th>
+          <th style="width:80px;text-align:center;">Rang</th>
+          <th style="width:90px;text-align:center;">Status</th>
+        </tr>
+      </thead>
+      <tbody id="studentTableBody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="7" style="padding:0">
+            <div class="table-footer">
+              <span>22 Studierende · sortiert nach Einschreibezeitpunkt</span>
+              <span>Algo-Lauf: 01.12.2026, 00:15 Uhr</span>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+</main>
+
+
+<script>
+// ── Moduldaten ──────────────────────────────────────────────────────────────
+const MODULE_MAP = {
+  'ml-ki':  'ML & KI',
+  'web':    'Web & Cloud',
+  'db':     'Datenbanken (Vt.)',
+  'sec':    'IT-Sicherheit',
+  'agile':  'Agile SE',
+  'entre':  'Entrepreneurship',
+  'qa':     'SQ & Testing',
+  'pm':     'Projektmanagement',
+};
+
+const MODULE_FULL = {
+  'ml-ki':  'Maschinelles Lernen und KI',
+  'web':    'Web-Technologien und Cloud-Architekturen',
+  'db':     'Datenbanksysteme (Vertiefung)',
+  'sec':    'IT-Sicherheit und Datenschutz',
+  'agile':  'Agile Softwareentwicklung',
+  'entre':  'Entrepreneurship und Digitalisierung',
+  'qa':     'Softwarequalität und Testing',
+  'pm':     'Projektmanagement in der IT',
+};
+
+// ── Mock-Einschreibungen (22 Studierende) ───────────────────────────────────
+// Format: { sNr, w: [Erstwunsch, Zweitwunsch, Drittwunsch], zugewiesen, rang }
+const STUDENTS = [
+  { sNr: 'S77212', w: ['ml-ki', 'web',   'sec'],   zugewiesen: 'ml-ki', rang: 1 },
+  { sNr: 'S83441', w: ['ml-ki', 'agile', 'qa'],    zugewiesen: 'ml-ki', rang: 1 },
+  { sNr: 'S79033', w: ['ml-ki', 'web',   'db'],    zugewiesen: 'web',   rang: 2 },
+  { sNr: 'S88618', w: ['web',   'ml-ki', 'entre'], zugewiesen: 'web',   rang: 1 },
+  { sNr: 'S81204', w: ['web',   'sec',   'ml-ki'], zugewiesen: 'web',   rang: 1 },
+  { sNr: 'S74590', w: ['web',   'db',    'agile'], zugewiesen: 'web',   rang: 1 },
+  { sNr: 'S86330', w: ['ml-ki', 'entre', 'pm'],    zugewiesen: 'ml-ki', rang: 1 },
+  { sNr: 'S72881', w: ['sec',   'ml-ki', 'db'],    zugewiesen: 'sec',   rang: 1 },
+  { sNr: 'S90112', w: ['sec',   'qa',    'web'],   zugewiesen: 'sec',   rang: 1 },
+  { sNr: 'S85042', w: ['ml-ki', 'sec',   'web'],   zugewiesen: 'sec',   rang: 2 },
+  { sNr: 'S78356', w: ['db',    'ml-ki', 'entre'], zugewiesen: 'db',    rang: 1 },
+  { sNr: 'S83019', w: ['db',    'web',   'sec'],   zugewiesen: 'db',    rang: 1 },
+  { sNr: 'S76622', w: ['agile', 'web',   'pm'],    zugewiesen: 'agile', rang: 1 },
+  { sNr: 'S89401', w: ['agile', 'ml-ki', 'qa'],    zugewiesen: 'agile', rang: 1 },
+  { sNr: 'S71834', w: ['ml-ki', 'agile', 'entre'], zugewiesen: 'ml-ki', rang: 1 },
+  { sNr: 'S92047', w: ['entre', 'web',   'agile'], zugewiesen: 'entre', rang: 1 },
+  { sNr: 'S80563', w: ['entre', 'pm',    'sec'],   zugewiesen: 'entre', rang: 1 },
+  { sNr: 'S87220', w: ['qa',    'sec',   'db'],    zugewiesen: 'qa',    rang: 1 },
+  { sNr: 'S73915', w: ['pm',    'agile', 'web'],   zugewiesen: 'pm',    rang: 1 },
+  { sNr: 'S81738', w: ['ml-ki', 'web',   'entre'], zugewiesen: 'ml-ki', rang: 1 },
+  { sNr: 'S88204', w: ['sec',   'ml-ki', 'agile'], zugewiesen: 'ml-ki', rang: 2 },
+  { sNr: 'S75599', w: ['web',   'sec',   'ml-ki'], zugewiesen: 'ml-ki', rang: 3 },
+];
+
+// ── Modulaggregation berechnen ──────────────────────────────────────────────
+function buildModuleStats() {
+  const stats = {};
+  Object.keys(MODULE_MAP).forEach(id => {
+    stats[id] = { eingeschr: 0, kapazitaet: 10, rang1: 0, rang2: 0, rang3: 0 };
+  });
+  STUDENTS.forEach(s => {
+    const st = stats[s.zugewiesen];
+    if (!st) return;
+    st.eingeschr++;
+    if (s.rang === 1) st.rang1++;
+    else if (s.rang === 2) st.rang2++;
+    else if (s.rang === 3) st.rang3++;
+  });
+  return stats;
+}
+
+// ── Modul-Tabelle rendern ───────────────────────────────────────────────────
+function renderModuleTable() {
+  const stats  = buildModuleStats();
+  const tbody  = document.getElementById('modulTableBody');
+  const order  = Object.keys(MODULE_MAP).sort((a,b) => stats[b].eingeschr - stats[a].eingeschr);
+
+  tbody.innerHTML = order.map(id => {
+    const s   = stats[id];
+    const pct = Math.round(s.eingeschr / s.kapazitaet * 100);
+    const voll = s.eingeschr >= s.kapazitaet;
+
+    return `
+      <tr>
+        <td>
+          <div class="modul-name-cell">${MODULE_MAP[id]}</div>
+          <div class="modul-id-cell" style="margin-top:2px">${MODULE_FULL[id]}</div>
+        </td>
+        <td style="text-align:center;font-weight:600;font-family:'IBM Plex Mono',monospace;">${s.eingeschr}</td>
+        <td style="text-align:center;color:var(--muted);font-family:'IBM Plex Mono',monospace;">${s.kapazitaet}</td>
+        <td>
+          <div class="auslastung-wrap">
+            <div class="auslastung-bar">
+              <div class="auslastung-fill ${voll ? 'voll' : ''}" style="width:${pct}%"></div>
+            </div>
+            <div class="auslastung-pct">${pct}&thinsp;%</div>
+          </div>
+        </td>
+        <td>
+          <div class="rang-chips">
+            ${s.rang1 ? `<div class="rang-chip"><div class="rang-chip-dot r1"></div>${s.rang1}× Erst</div>` : ''}
+            ${s.rang2 ? `<div class="rang-chip"><div class="rang-chip-dot r2"></div>${s.rang2}× Zweit</div>` : ''}
+            ${s.rang3 ? `<div class="rang-chip"><div class="rang-chip-dot r3"></div>${s.rang3}× Dritt</div>` : ''}
+            ${!s.eingeschr ? `<div style="font-size:12px;color:var(--muted);font-style:italic">—</div>` : ''}
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+// ── Studenten-Tabelle rendern ───────────────────────────────────────────────
+function renderStudentTable() {
+  const tbody = document.getElementById('studentTableBody');
+  tbody.innerHTML = STUDENTS.map(s => {
+    const rangClass = `r${s.rang}`;
+    const statusOk  = s.rang === 1;
+    return `
+      <tr>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:12px;">${s.sNr}</td>
+        <td style="font-size:12px;">${MODULE_MAP[s.w[0]] || s.w[0]}</td>
+        <td style="font-size:12px;color:var(--soft);">${MODULE_MAP[s.w[1]] || s.w[1]}</td>
+        <td style="font-size:12px;color:var(--muted);">${MODULE_MAP[s.w[2]] || s.w[2]}</td>
+        <td style="font-weight:600;font-size:12px;">${MODULE_MAP[s.zugewiesen]}</td>
+        <td style="text-align:center;">
+          <div style="display:flex;justify-content:center;">
+            <div class="rank-badge ${rangClass}">${s.rang}</div>
+          </div>
+        </td>
+        <td style="text-align:center;">
+          <div class="status-chip ${statusOk ? 'ok' : 'warn'}">
+            <div class="status-chip-dot"></div>
+            ${statusOk ? 'Erstwunsch' : s.rang === 2 ? 'Zweitwunsch' : 'Drittwunsch'}
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+// Init
+renderModuleTable();
+renderStudentTable();
+</script>
+</body>
+</html>
