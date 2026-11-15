@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin — Modulzuordnungen WS 2026/27 · HTW Dresden</title>
+  <title>Admin — Projektseminarzuordnungen WS 2026/27 · HTW Dresden</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Open Sans: Hausschrift HTW Dresden (Corporate Design 2023) -->
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
@@ -31,203 +30,119 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 16px; }
-
-    body {
-      font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
-      background: var(--bg); color: var(--text);
-      -webkit-font-smoothing: antialiased; min-height: 100vh;
-    }
-
+    body { font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100vh; }
     :focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 
-    /* ── Header ──────────────────────────────────────── */
-    .admin-header {
-      background: var(--dark); border-bottom: 3px solid var(--orange);
-      position: sticky; top: 0; z-index: 20;
-    }
-    .admin-header-inner {
-      max-width: 1200px; margin: 0 auto;
-      padding: 0 24px; height: 54px;
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    }
-
+    /* ── Header ────────────────────────────────────────── */
+    .admin-header { background: var(--dark); border-bottom: 3px solid var(--orange); position: sticky; top: 0; z-index: 20; }
+    .admin-header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .header-brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
-    .header-logo-box {
-      width: 34px; height: 34px; background: var(--orange);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
+    .header-logo-box { width: 34px; height: 34px; background: var(--orange); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .header-logo-box span { color: #fff; font-size: 9px; font-weight: 700; letter-spacing: .05em; }
     .header-sep { width: 1px; height: 24px; background: rgba(255,255,255,.15); flex-shrink: 0; }
     .header-ctx-title { font-size: 13px; font-weight: 600; color: #fff; }
-    .header-ctx-meta {
-      font-size: 10px; color: rgba(255,255,255,.4);
-      text-transform: uppercase; letter-spacing: .08em; margin-top: 1px;
-    }
-
-    .admin-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 3px 9px;
-      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
-      font-size: 10px; font-weight: 600; letter-spacing: .08em;
-      text-transform: uppercase; color: rgba(255,255,255,.75);
-    }
+    .header-ctx-meta { font-size: 10px; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .08em; margin-top: 1px; }
+    .admin-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.75); }
     .admin-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
-
-    .header-nav a {
-      font-size: 11px; color: rgba(255,255,255,.55); text-decoration: none;
-      display: flex; align-items: center; gap: 5px; transition: color .12s;
-    }
+    .header-nav a { font-size: 11px; color: rgba(255,255,255,.55); text-decoration: none; display: flex; align-items: center; gap: 5px; transition: color .12s; }
     .header-nav a:hover { color: rgba(255,255,255,.85); }
 
-    /* ── Fristleiste ─────────────────────────────────── */
+    /* ── Fristleiste ───────────────────────────────────── */
     .frist-bar { background: var(--surface); border-bottom: 1px solid var(--border-light); }
-    .frist-bar-inner {
-      max-width: 1200px; margin: 0 auto; padding: 7px 24px;
-      display: flex; align-items: center; gap: 10px;
-      font-size: 12px; color: var(--soft);
-    }
-    .frist-dot { width: 7px; height: 7px; background: #22a349; flex-shrink: 0; }
+    .frist-bar-inner { max-width: 1200px; margin: 0 auto; padding: 7px 24px; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--soft); }
+    .frist-dot { width: 7px; height: 7px; background: #d97706; flex-shrink: 0; }
 
-    /* ── Main ────────────────────────────────────────── */
-    .admin-main {
-      max-width: 1200px; margin: 0 auto;
-      padding: 28px 24px 80px;
-    }
+    /* ── Main ──────────────────────────────────────────── */
+    .admin-main { max-width: 1200px; margin: 0 auto; padding: 28px 24px 80px; }
 
-    /* ── Stats-Leiste (ersetzt die 3 KPI-Karten) ─────── */
-    .stats-bar {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-top: 2px solid var(--dark);
-      display: flex;
-      margin-bottom: 36px;
-    }
-    .stats-item {
-      flex: 1; padding: 18px 22px;
-      border-right: 1px solid var(--border-light);
-    }
+    /* ── Stats-Leiste ──────────────────────────────────── */
+    .stats-bar { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--dark); display: flex; margin-bottom: 28px; }
+    .stats-item { flex: 1; padding: 18px 22px; border-right: 1px solid var(--border-light); }
     .stats-item:last-child { border-right: none; }
-    .stats-num {
-      font-size: 26px; font-weight: 700;
-      letter-spacing: -.02em; line-height: 1;
-      color: var(--text); margin-bottom: 5px;
-    }
+    .stats-num { font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1; color: var(--text); margin-bottom: 5px; }
     .stats-num.hl { color: var(--orange); }
-    .stats-num.ts {
-      font-size: 15px; letter-spacing: 0;
-      font-family: 'IBM Plex Mono', monospace;
-    }
+    .stats-num.ts { font-size: 15px; letter-spacing: 0; font-family: 'IBM Plex Mono', monospace; }
     .stats-desc { font-size: 12px; color: var(--soft); }
     .stats-sub  { font-size: 11px; color: var(--muted); margin-top: 3px; }
-
-    /* Rang-Verteilung in Stats */
     .rank-dist { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
     .rank-dist-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--soft); }
     .rank-dist-dot { width: 8px; height: 8px; flex-shrink: 0; }
     .rank-dist-dot.r1 { background: var(--r1); }
     .rank-dist-dot.r2 { background: var(--r2); }
     .rank-dist-dot.r3 { background: var(--r3); }
-
-    /* Verteilungsbalken in Stats */
     .dist-bar { display: flex; height: 4px; margin-top: 10px; gap: 1px; }
     .dist-seg { height: 100%; }
     .dist-seg.r1 { background: var(--r1); }
     .dist-seg.r2 { background: var(--r2); }
     .dist-seg.r3 { background: var(--r3); }
+    @media (max-width: 700px) { .stats-bar { flex-wrap: wrap; } .stats-item { flex: 0 0 50%; border-bottom: 1px solid var(--border-light); } }
 
-    @media (max-width: 700px) {
-      .stats-bar { flex-wrap: wrap; }
-      .stats-item { flex: 0 0 50%; border-bottom: 1px solid var(--border-light); }
+    /* ── Studiendekan-Aktionsleiste ────────────────────── */
+    .studiendekan-bar {
+      background: var(--success-bg);
+      border: 1px solid #c3dfc9;
+      border-left: 3px solid var(--success);
+      padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      margin-bottom: 28px; font-size: 13px; color: var(--text);
+      flex-wrap: wrap; gap: 12px;
     }
+    .studiendekan-info { flex: 1; min-width: 200px; line-height: 1.5; }
+    .studiendekan-info strong { color: var(--success); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 20px; font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; border: 2px solid transparent; border-radius: 0; cursor: pointer; transition: background .12s, color .12s, border-color .12s; white-space: nowrap; }
+    .btn-primary { background: var(--success); color: #fff; border-color: var(--success); }
+    .btn-primary:hover { background: #1a6232; border-color: #1a6232; }
 
-    /* ── Abschnittsüberschriften ─────────────────────── */
+    /* ── Abschnittsüberschriften ───────────────────────── */
     .section { margin-bottom: 36px; }
+    .page-h2 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; padding-left: 10px; border-left: 3px solid var(--orange); line-height: 1.3; }
 
-    .page-h2 {
-      font-size: 15px; font-weight: 600;
-      color: var(--text); margin-bottom: 14px;
-      padding-left: 10px;
-      border-left: 3px solid var(--orange);
-      line-height: 1.3;
-    }
-
-    /* ── Tabellen ────────────────────────────────────── */
-    .data-table {
-      width: 100%; border-collapse: collapse;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-top: 2px solid var(--dark);
-    }
-    .data-table th {
-      text-align: left; padding: 10px 16px;
-      font-size: 12px; font-weight: 600; color: var(--soft);
-      background: #F6F6F6; border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    .data-table td {
-      padding: 13px 16px; font-size: 13px;
-      border-bottom: 1px solid var(--border-light);
-      vertical-align: middle;
-    }
+    /* ── Tabellen ──────────────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--dark); }
+    .data-table th { text-align: left; padding: 10px 16px; font-size: 12px; font-weight: 600; color: var(--soft); background: #F6F6F6; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .data-table td { padding: 13px 16px; font-size: 13px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
     .data-table tr:last-child td { border-bottom: none; }
     .data-table tbody tr:hover td { background: #FAFAFA; }
+    .table-footer { background: #F6F6F6; border-top: 1px solid var(--border-light); padding: 9px 16px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--muted); }
 
-    .table-footer {
-      background: #F6F6F6; border-top: 1px solid var(--border-light);
-      padding: 9px 16px;
-      display: flex; align-items: center; justify-content: space-between;
-      font-size: 11px; color: var(--muted);
-    }
+    .seminar-name { font-size: 13px; font-weight: 600; }
+    .seminar-full { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-    /* Modulname in Tabelle */
-    .modul-name { font-size: 13px; font-weight: 600; }
-    .modul-full { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-    /* Auslastungsbalken */
     .auslastung-wrap { display: flex; align-items: center; gap: 10px; }
     .auslastung-bar  { flex: 1; height: 5px; background: var(--border-light); min-width: 60px; }
     .auslastung-fill { height: 100%; background: var(--orange); }
-    .auslastung-pct  {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px; color: var(--soft); flex-shrink: 0; min-width: 32px;
-    }
+    .auslastung-pct  { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); flex-shrink: 0; min-width: 32px; }
 
-    /* Rang-Chips */
     .rang-chips { display: flex; gap: 5px; flex-wrap: wrap; }
-    .rang-chip  {
-      display: flex; align-items: center; gap: 4px;
-      padding: 2px 7px; font-size: 11px;
-      border: 1px solid var(--border-light);
-    }
+    .rang-chip  { display: flex; align-items: center; gap: 4px; padding: 2px 7px; font-size: 11px; border: 1px solid var(--border-light); }
     .rang-chip-dot { width: 6px; height: 6px; }
     .rang-chip-dot.r1 { background: var(--r1); }
     .rang-chip-dot.r2 { background: var(--r2); }
     .rang-chip-dot.r3 { background: var(--r3); }
 
-    /* Rang-Badge */
-    .rank-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 22px; height: 22px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0;
-    }
+    .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0; }
     .rank-badge.r1 { background: var(--r1); }
     .rank-badge.r2 { background: var(--r2); }
     .rank-badge.r3 { background: var(--r3); }
 
-    /* Status */
-    .status-chip {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 2px 8px; font-size: 11px; font-weight: 500;
-    }
+    .status-chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; font-size: 11px; font-weight: 500; }
     .status-chip.ok   { background: var(--success-bg); color: var(--success); }
     .status-chip.warn { background: #FEF0E8; color: var(--orange); }
     .status-chip-dot  { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
+    /* Motivationsschreiben expand */
+    .expand-btn { background: none; border: 1px solid var(--border-light); cursor: pointer; padding: 2px 7px; font-family: inherit; font-size: 10px; color: var(--muted); display: inline-flex; align-items: center; gap: 4px; transition: border-color .12s, color .12s; }
+    .expand-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .expand-btn svg { transition: transform .15s; }
+    .expand-btn.open svg { transform: rotate(180deg); }
+    .motiv-expand-row { display: none; }
+    .motiv-expand-row.visible { display: table-row; }
+    .motiv-expand-cell { padding: 10px 16px 14px 48px !important; background: #FAFAFA !important; font-size: 12px; color: var(--soft); font-style: italic; line-height: 1.65; border-left: 3px solid var(--orange) !important; }
+
     @media (max-width: 768px) {
       .admin-main { padding: 20px 16px 60px; }
-      .data-table th:nth-child(5),
-      .data-table td:nth-child(5) { display: none; }
+      .data-table th:nth-child(5), .data-table td:nth-child(5) { display: none; }
+      .data-table th:nth-child(8), .data-table td:nth-child(8) { display: none; }
     }
   </style>
 </head>
@@ -240,21 +155,16 @@
       <div class="header-logo-box"><span>HTW</span></div>
       <div class="header-sep"></div>
       <div>
-        <div class="header-ctx-title">Modulzuordnungen — Algorithmus-Ergebnis</div>
+        <div class="header-ctx-title">Projektseminarzuordnungen — Bewerbungsübersicht</div>
         <div class="header-ctx-meta">WS&nbsp;2026/27 · Wirtschaftsinformatik</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:14px">
-      <div class="admin-badge">
-        <div class="admin-badge-dot"></div>
-        Admin
-      </div>
+      <div class="admin-badge"><div class="admin-badge-dot"></div>Studiendekan</div>
       <div class="header-nav">
         <a href="index.html">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Studenten-Portal
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Studierenden-Portal
         </a>
       </div>
     </div>
@@ -264,23 +174,22 @@
 <div class="frist-bar">
   <div class="frist-bar-inner">
     <div class="frist-dot"></div>
-    <span>Einschreibefrist abgelaufen · <strong>Algorithmus-Lauf: 01. Dezember 2026, 00:15 Uhr</strong>
-          &nbsp;·&nbsp; Zuordnung finalisiert</span>
+    <span>Einschreibefrist abgelaufen · <strong>KI-Vorschläge erstellt: 01. Dezember 2026, 00:15 Uhr</strong>&nbsp;·&nbsp; Zuteilung durch Studiendekan ausstehend</span>
   </div>
 </div>
 
 <main class="admin-main">
 
-  <!-- Stats-Leiste -->
+  <!-- Stats -->
   <div class="stats-bar">
     <div class="stats-item">
       <div class="stats-num">22</div>
-      <div class="stats-desc">Einschreibungen gesamt</div>
+      <div class="stats-desc">Bewerbungen gesamt</div>
       <div class="stats-sub">von 24 Studierenden im Kurs</div>
     </div>
     <div class="stats-item">
       <div class="stats-num hl">82&thinsp;%</div>
-      <div class="stats-desc">Erstwunsch erhalten</div>
+      <div class="stats-desc">KI-Vorschlag: Erstwunsch</div>
       <div class="rank-dist">
         <div class="rank-dist-item"><div class="rank-dist-dot r1"></div>18&thinsp;×&thinsp;Rang&thinsp;1</div>
         <div class="rank-dist-item"><div class="rank-dist-dot r2"></div>3&thinsp;×&thinsp;Rang&thinsp;2</div>
@@ -294,24 +203,32 @@
     </div>
     <div class="stats-item">
       <div class="stats-num">8&thinsp;/&thinsp;8</div>
-      <div class="stats-desc">Module belegt</div>
-      <div class="stats-sub">Kapazität je Modul: 10 Plätze</div>
+      <div class="stats-desc">Projektseminare belegt</div>
+      <div class="stats-sub">Kapazität je Seminar: 10 Plätze</div>
     </div>
     <div class="stats-item">
       <div class="stats-num ts">01.12.2026</div>
-      <div class="stats-desc">Algorithmus-Lauf</div>
-      <div class="stats-sub">00:15 Uhr · automatisch</div>
+      <div class="stats-desc">KI-Auswertung</div>
+      <div class="stats-sub">00:15 Uhr · Vorschläge erstellt</div>
     </div>
   </div>
 
-  <!-- Modulauslastung -->
+  <!-- Studiendekan Aktionsleiste -->
+  <div class="studiendekan-bar">
+    <div class="studiendekan-info">
+      <strong>22 KI-Vorschläge liegen vor.</strong> Bitte Bewerbungen und Motivationsschreiben prüfen und anschließend Zuteilung verbindlich bestätigen. Die finale Entscheidung liegt beim Studiendekan.
+    </div>
+    <button class="btn btn-primary" onclick="handleZuteilungBestaetigen()">Zuteilung bestätigen</button>
+  </div>
+
+  <!-- Seminarauslastung -->
   <div class="section">
-    <h2 class="page-h2">Modulauslastung</h2>
+    <h2 class="page-h2">Seminarauslastung</h2>
     <table class="data-table">
       <thead>
         <tr>
-          <th>Modul</th>
-          <th style="width:110px">Eingeschrieben</th>
+          <th>Projektseminar</th>
+          <th style="width:110px">Bewerbungen</th>
           <th style="width:90px">Kapazität</th>
           <th style="width:180px">Auslastung</th>
           <th>Rang-Verteilung</th>
@@ -322,7 +239,7 @@
         <tr>
           <td colspan="5" style="padding:0">
             <div class="table-footer">
-              <span>8 Module · 22 Zuordnungen</span>
+              <span>8 Projektseminare · 22 Bewerbungen</span>
               <span>Einschreibeschluss 30.11.2026</span>
             </div>
           </td>
@@ -331,9 +248,9 @@
     </table>
   </div>
 
-  <!-- Individuelle Zuordnungen -->
+  <!-- Bewerbungen und KI-Vorschläge -->
   <div class="section">
-    <h2 class="page-h2">Individuelle Zuordnungen</h2>
+    <h2 class="page-h2">Bewerbungen und KI-Vorschläge</h2>
     <table class="data-table">
       <thead>
         <tr>
@@ -341,18 +258,19 @@
           <th>Erstwunsch</th>
           <th>Zweitwunsch</th>
           <th>Drittwunsch</th>
-          <th style="width:160px">Zugewiesen</th>
+          <th style="width:160px">KI-Vorschlag</th>
           <th style="width:72px;text-align:center">Rang</th>
-          <th style="width:110px;text-align:center">Ergebnis</th>
+          <th style="width:120px;text-align:center">Ergebnis</th>
+          <th style="width:72px;text-align:center">Motiv</th>
         </tr>
       </thead>
       <tbody id="studentTableBody"></tbody>
       <tfoot>
         <tr>
-          <td colspan="7" style="padding:0">
+          <td colspan="8" style="padding:0">
             <div class="table-footer">
-              <span>22 Studierende · sortiert nach Einschreibezeitpunkt</span>
-              <span>Algo-Lauf: 01.12.2026, 00:15 Uhr</span>
+              <span>22 Bewerbungen · sortiert nach Einschreibezeitpunkt</span>
+              <span>KI-Auswertung: 01.12.2026, 00:15 Uhr</span>
             </div>
           </td>
         </tr>
@@ -365,58 +283,55 @@
 
 <script>
 const MODULE_SHORT = {
-  'ml-ki':  'ML & KI',
-  'web':    'Web & Cloud',
-  'db':     'Datenbanken (Vt.)',
+  'ml-ki':  'ML in der Praxis',
+  'web':    'Cloud-native SE',
+  'db':     'Datenbanken & BigData',
   'sec':    'IT-Sicherheit',
   'agile':  'Agile SE',
-  'entre':  'Entrepreneurship',
-  'qa':     'SQ & Testing',
-  'pm':     'Projektmanagement',
+  'entre':  'Digital Entrepr.',
+  'qa':     'SQ Engineering',
+  'pm':     'IT-Projektmgmt.',
 };
 
 const MODULE_FULL = {
-  'ml-ki':  'Maschinelles Lernen und KI',
-  'web':    'Web-Technologien und Cloud-Architekturen',
-  'db':     'Datenbanksysteme (Vertiefung)',
-  'sec':    'IT-Sicherheit und Datenschutz',
-  'agile':  'Agile Softwareentwicklung',
-  'entre':  'Entrepreneurship und Digitalisierung',
-  'qa':     'Softwarequalität und Testing',
-  'pm':     'Projektmanagement in der IT',
+  'ml-ki':  'Machine Learning in der Praxis (PS-01)',
+  'web':    'Cloud-native Softwareentwicklung (PS-02)',
+  'db':     'Datenbanken und Big Data (PS-03)',
+  'sec':    'IT-Sicherheit und Compliance (PS-04)',
+  'agile':  'Agile Softwareentwicklung (PS-05)',
+  'entre':  'Digital Entrepreneurship (PS-06)',
+  'qa':     'Software Quality Engineering (PS-07)',
+  'pm':     'IT-Projektmanagement in der Praxis (PS-08)',
 };
 
-// Mock-Daten: 22 Einschreibungen
 const STUDENTS = [
-  { sNr: 'S77212', w: ['ml-ki', 'web',   'sec'],   zugewiesen: 'ml-ki', rang: 1 },
-  { sNr: 'S83441', w: ['ml-ki', 'agile', 'qa'],    zugewiesen: 'ml-ki', rang: 1 },
-  { sNr: 'S79033', w: ['ml-ki', 'web',   'db'],    zugewiesen: 'web',   rang: 2 },
-  { sNr: 'S88618', w: ['web',   'ml-ki', 'entre'], zugewiesen: 'web',   rang: 1 },
-  { sNr: 'S81204', w: ['web',   'sec',   'ml-ki'], zugewiesen: 'web',   rang: 1 },
-  { sNr: 'S74590', w: ['web',   'db',    'agile'], zugewiesen: 'web',   rang: 1 },
-  { sNr: 'S86330', w: ['ml-ki', 'entre', 'pm'],    zugewiesen: 'ml-ki', rang: 1 },
-  { sNr: 'S72881', w: ['sec',   'ml-ki', 'db'],    zugewiesen: 'sec',   rang: 1 },
-  { sNr: 'S90112', w: ['sec',   'qa',    'web'],   zugewiesen: 'sec',   rang: 1 },
-  { sNr: 'S85042', w: ['ml-ki', 'sec',   'web'],   zugewiesen: 'sec',   rang: 2 },
-  { sNr: 'S78356', w: ['db',    'ml-ki', 'entre'], zugewiesen: 'db',    rang: 1 },
-  { sNr: 'S83019', w: ['db',    'web',   'sec'],   zugewiesen: 'db',    rang: 1 },
-  { sNr: 'S76622', w: ['agile', 'web',   'pm'],    zugewiesen: 'agile', rang: 1 },
-  { sNr: 'S89401', w: ['agile', 'ml-ki', 'qa'],    zugewiesen: 'agile', rang: 1 },
-  { sNr: 'S71834', w: ['ml-ki', 'agile', 'entre'], zugewiesen: 'ml-ki', rang: 1 },
-  { sNr: 'S92047', w: ['entre', 'web',   'agile'], zugewiesen: 'entre', rang: 1 },
-  { sNr: 'S80563', w: ['entre', 'pm',    'sec'],   zugewiesen: 'entre', rang: 1 },
-  { sNr: 'S87220', w: ['qa',    'sec',   'db'],    zugewiesen: 'qa',    rang: 1 },
-  { sNr: 'S73915', w: ['pm',    'agile', 'web'],   zugewiesen: 'pm',    rang: 1 },
-  { sNr: 'S81738', w: ['ml-ki', 'web',   'entre'], zugewiesen: 'ml-ki', rang: 1 },
-  { sNr: 'S88204', w: ['sec',   'ml-ki', 'agile'], zugewiesen: 'ml-ki', rang: 2 },
-  { sNr: 'S75599', w: ['web',   'sec',   'ml-ki'], zugewiesen: 'ml-ki', rang: 3 },
+  { sNr: 'S77212', w: ['ml-ki', 'web',   'sec'],   zugewiesen: 'ml-ki', rang: 1, motiv: 'Ich arbeite seit einem Jahr aktiv mit Python und scikit-learn und möchte mein Wissen im Bereich ML systematisch vertiefen. Das Projektseminar passt direkt zu meinem Karriereziel im Data Engineering.' },
+  { sNr: 'S83441', w: ['ml-ki', 'agile', 'qa'],    zugewiesen: 'ml-ki', rang: 1, motiv: 'Als Werkstudentin in einem Data-Science-Team habe ich erste Erfahrungen mit neuronalen Netzen gesammelt. Das Projektseminar würde mir helfen, diese Grundlagen strukturiert auf ein reales Problem anzuwenden.' },
+  { sNr: 'S79033', w: ['ml-ki', 'web',   'db'],    zugewiesen: 'web',   rang: 2, motiv: 'Machine Learning ist mein Schwerpunkt; Cloud-native Entwicklung interessiert mich als zweite Wahl — besonders die CI/CD-Aspekte in Verbindung mit meiner Werkstudentenstelle.' },
+  { sNr: 'S88618', w: ['web',   'ml-ki', 'entre'], zugewiesen: 'web',   rang: 1, motiv: 'Ich habe bereits ein Projekt auf AWS realisiert und möchte dieses Wissen in einem strukturierten Rahmen vertiefen. Der Fokus auf CI/CD-Pipelines ist für meine angestrebte Tätigkeit als DevOps Engineer besonders relevant.' },
+  { sNr: 'S81204', w: ['web',   'sec',   'ml-ki'], zugewiesen: 'web',   rang: 1, motiv: '' },
+  { sNr: 'S74590', w: ['web',   'db',    'agile'], zugewiesen: 'web',   rang: 1, motiv: '' },
+  { sNr: 'S86330', w: ['ml-ki', 'entre', 'pm'],    zugewiesen: 'ml-ki', rang: 1, motiv: 'Mein Berufsziel ist die Entwicklung KI-gestützter Produkte. Das Projektseminar bietet die beste Grundlage, Machine Learning in einem praxisnahen Kontext zu erlernen.' },
+  { sNr: 'S72881', w: ['sec',   'ml-ki', 'db'],    zugewiesen: 'sec',   rang: 1, motiv: 'Ich bin Werkstudent bei einem IT-Dienstleister mit Schwerpunkt IT-Security und möchte meine praktischen Erfahrungen durch das Projektseminar theoretisch untermauern.' },
+  { sNr: 'S90112', w: ['sec',   'qa',    'web'],   zugewiesen: 'sec',   rang: 1, motiv: '' },
+  { sNr: 'S85042', w: ['ml-ki', 'sec',   'web'],   zugewiesen: 'sec',   rang: 2, motiv: 'IT-Sicherheit ist für mich ein wichtiges Thema mit klarem Bezug zu meinem Studium — meine Bachelorarbeit behandelt DSGVO-konforme Systementwicklung.' },
+  { sNr: 'S78356', w: ['db',    'ml-ki', 'entre'], zugewiesen: 'db',    rang: 1, motiv: 'Datenbanken sind für mich zentral — ich schreibe meine Bachelorarbeit über verteilte Datenbankarchitekturen und das Projektseminar wäre eine direkte Ergänzung.' },
+  { sNr: 'S83019', w: ['db',    'web',   'sec'],   zugewiesen: 'db',    rang: 1, motiv: '' },
+  { sNr: 'S76622', w: ['agile', 'web',   'pm'],    zugewiesen: 'agile', rang: 1, motiv: '' },
+  { sNr: 'S89401', w: ['agile', 'ml-ki', 'qa'],    zugewiesen: 'agile', rang: 1, motiv: '' },
+  { sNr: 'S71834', w: ['ml-ki', 'agile', 'entre'], zugewiesen: 'ml-ki', rang: 1, motiv: '' },
+  { sNr: 'S92047', w: ['entre', 'web',   'agile'], zugewiesen: 'entre', rang: 1, motiv: 'Ich gründe neben dem Studium ein kleines Softwareunternehmen und sehe das Projektseminar als Gelegenheit, Geschäftsmodellentwicklung und Lean-Startup in einem akademischen Rahmen zu verankern.' },
+  { sNr: 'S80563', w: ['entre', 'pm',    'sec'],   zugewiesen: 'entre', rang: 1, motiv: '' },
+  { sNr: 'S87220', w: ['qa',    'sec',   'db'],    zugewiesen: 'qa',    rang: 1, motiv: '' },
+  { sNr: 'S73915', w: ['pm',    'agile', 'web'],   zugewiesen: 'pm',    rang: 1, motiv: '' },
+  { sNr: 'S81738', w: ['ml-ki', 'web',   'entre'], zugewiesen: 'ml-ki', rang: 1, motiv: '' },
+  { sNr: 'S88204', w: ['sec',   'ml-ki', 'agile'], zugewiesen: 'ml-ki', rang: 2, motiv: 'IT-Sicherheit ist mein Schwerpunkt durch meine Werkstudentenstelle, aber ich möchte auch ML kennenlernen, um KI-Sicherheitsthemen besser zu verstehen.' },
+  { sNr: 'S75599', w: ['web',   'sec',   'ml-ki'], zugewiesen: 'ml-ki', rang: 3, motiv: '' },
 ];
 
 function buildModuleStats() {
   const stats = {};
-  Object.keys(MODULE_SHORT).forEach(id => {
-    stats[id] = { eingeschr: 0, kapazitaet: 10, rang1: 0, rang2: 0, rang3: 0 };
-  });
+  Object.keys(MODULE_SHORT).forEach(id => { stats[id] = { eingeschr: 0, kapazitaet: 10, rang1: 0, rang2: 0, rang3: 0 }; });
   STUDENTS.forEach(s => {
     const st = stats[s.zugewiesen];
     if (!st) return;
@@ -431,23 +346,20 @@ function buildModuleStats() {
 function renderModuleTable() {
   const stats = buildModuleStats();
   const order = Object.keys(MODULE_SHORT).sort((a, b) => stats[b].eingeschr - stats[a].eingeschr);
-
   document.getElementById('modulTableBody').innerHTML = order.map(id => {
     const s   = stats[id];
     const pct = Math.round(s.eingeschr / s.kapazitaet * 100);
     return `
       <tr>
         <td>
-          <div class="modul-name">${MODULE_SHORT[id]}</div>
-          <div class="modul-full">${MODULE_FULL[id]}</div>
+          <div class="seminar-name">${MODULE_SHORT[id]}</div>
+          <div class="seminar-full">${MODULE_FULL[id]}</div>
         </td>
         <td style="font-family:'IBM Plex Mono',monospace;font-weight:600;">${s.eingeschr}</td>
         <td style="font-family:'IBM Plex Mono',monospace;color:var(--muted);">${s.kapazitaet}</td>
         <td>
           <div class="auslastung-wrap">
-            <div class="auslastung-bar">
-              <div class="auslastung-fill" style="width:${pct}%"></div>
-            </div>
+            <div class="auslastung-bar"><div class="auslastung-fill" style="width:${pct}%"></div></div>
             <div class="auslastung-pct">${pct}&thinsp;%</div>
           </div>
         </td>
@@ -464,8 +376,9 @@ function renderModuleTable() {
 }
 
 function renderStudentTable() {
-  document.getElementById('studentTableBody').innerHTML = STUDENTS.map(s => {
-    const ok = s.rang === 1;
+  document.getElementById('studentTableBody').innerHTML = STUDENTS.map((s, i) => {
+    const ok       = s.rang === 1;
+    const hasMotiv = s.motiv && s.motiv.trim().length > 0;
     return `
       <tr>
         <td style="font-family:'IBM Plex Mono',monospace;font-size:12px;">${s.sNr}</td>
@@ -473,19 +386,40 @@ function renderStudentTable() {
         <td style="font-size:12px;color:var(--soft);">${MODULE_SHORT[s.w[1]] || s.w[1]}</td>
         <td style="font-size:12px;color:var(--muted);">${MODULE_SHORT[s.w[2]] || s.w[2]}</td>
         <td style="font-size:12px;font-weight:600;">${MODULE_SHORT[s.zugewiesen]}</td>
-        <td style="text-align:center;">
-          <div style="display:flex;justify-content:center;">
-            <div class="rank-badge r${s.rang}">${s.rang}</div>
-          </div>
-        </td>
+        <td style="text-align:center;"><div style="display:flex;justify-content:center;"><div class="rank-badge r${s.rang}">${s.rang}</div></div></td>
         <td style="text-align:center;">
           <div class="status-chip ${ok ? 'ok' : 'warn'}">
             <div class="status-chip-dot"></div>
             ${s.rang === 1 ? 'Erstwunsch' : s.rang === 2 ? 'Zweitwunsch' : 'Drittwunsch'}
           </div>
         </td>
+        <td style="text-align:center;">
+          ${hasMotiv
+            ? `<button class="expand-btn" id="ebtn-${i}" onclick="toggleMotiv(${i})">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                Motiv
+               </button>`
+            : `<span style="font-size:11px;color:var(--muted)">—</span>`}
+        </td>
+      </tr>
+      <tr class="motiv-expand-row" id="motiv-row-${i}">
+        <td class="motiv-expand-cell" colspan="8">"${hasMotiv ? s.motiv : 'Kein Motivationsschreiben eingereicht.'}"</td>
       </tr>`;
   }).join('');
+}
+
+function toggleMotiv(i) {
+  const row = document.getElementById('motiv-row-' + i);
+  const btn = document.getElementById('ebtn-' + i);
+  const isOpen = row.classList.contains('visible');
+  row.classList.toggle('visible', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+}
+
+function handleZuteilungBestaetigen() {
+  if (confirm('Zuteilung verbindlich bestätigen und an Studierende kommunizieren?')) {
+    alert('Demo: Zuteilung bestätigt. In der Produktion würden hier Benachrichtigungen an alle Studierenden versendet.');
+  }
 }
 
 renderModuleTable();

@@ -3,22 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wahlpflichtmodul-Einschreibung — HTW Dresden</title>
+  <title>Projektseminar-Einschreibung — HTW Dresden</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* ══════════════════════════════════════════════════════════
-       DESIGN TOKENS — HTW DRESDEN
-       ──────────────────────────────────────────────────────
-       Orange-Familie (alle Prioritäten im selben Ton):
-         R1  #E05A1C  — Erstwunsch  (volle Stärke)
-         R2  #B84818  — Zweitwunsch (Dunkel-Amber)
-         R3  #8C3610  — Drittwunsch (Mahagoni-Orange)
-       ══════════════════════════════════════════════════════════ */
-
     :root {
       --orange:        #E05A1C;
       --orange-dark:   #C44E18;
@@ -30,231 +21,91 @@
       --text:          #1D1D1B;
       --soft:          #5C5C5C;
       --muted:         #9A9A9A;
-
       --r1: #E05A1C;
       --r2: #B84818;
       --r3: #8C3610;
-
       --error:      #C00000;
       --error-bg:   #FFF5F4;
       --success:    #217A3C;
       --success-bg: #F0F7F2;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0; padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html { font-size: 16px; }
-
-    body {
-      font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
-    }
-
+    body { font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100vh; }
     .hide { display: none !important; }
-
-    :focus-visible {
-      outline: 2px solid var(--orange);
-      outline-offset: 2px;
-    }
-
+    :focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
     .mono { font-family: 'IBM Plex Mono', 'Courier New', monospace; }
 
-
-    /* ══════════════════════════════════════════════════════════
-       BASISELEMENTE
-    ══════════════════════════════════════════════════════════ */
-
-    .input {
-      display: block; width: 100%;
-      padding: 10px 12px;
-      font-family: inherit; font-size: 14px;
-      color: var(--text); background: var(--surface);
-      border: 1.5px solid var(--border); border-radius: 0;
-      outline: none;
-      transition: border-color .12s, box-shadow .12s;
-    }
+    /* ── Basiselemente ───────────────────────────────────── */
+    .input { display: block; width: 100%; padding: 10px 12px; font-family: inherit; font-size: 14px; color: var(--text); background: var(--surface); border: 1.5px solid var(--border); border-radius: 0; outline: none; transition: border-color .12s, box-shadow .12s; }
     .input::placeholder { color: var(--muted); }
-    .input:focus {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 3px rgba(224,90,28,.12);
-    }
+    .input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(224,90,28,.12); }
     .input.has-error { border-color: var(--error); }
 
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 7px; padding: 10px 20px;
-      font-family: inherit; font-size: 12px; font-weight: 700;
-      letter-spacing: .07em; text-transform: uppercase;
-      border: 2px solid transparent; border-radius: 0;
-      cursor: pointer;
-      transition: background .12s, color .12s, border-color .12s, opacity .1s;
-      white-space: nowrap;
-    }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 20px; font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; border: 2px solid transparent; border-radius: 0; cursor: pointer; transition: background .12s, color .12s, border-color .12s, opacity .1s; white-space: nowrap; }
     .btn-primary { background: var(--orange); color: #fff; border-color: var(--orange); }
     .btn-primary:hover  { background: var(--orange-dark); border-color: var(--orange-dark); }
     .btn-primary:active { opacity: .9; }
-    .btn-primary:disabled {
-      background: var(--border); border-color: var(--border);
-      color: var(--muted); cursor: not-allowed;
-    }
+    .btn-primary:disabled { background: var(--border); border-color: var(--border); color: var(--muted); cursor: not-allowed; }
+    .btn-outline-light { background: transparent; color: rgba(255,255,255,.75); border-color: rgba(255,255,255,.3); padding: 6px 13px; font-size: 11px; }
+    .btn-outline-light:hover { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.55); }
 
-    .btn-outline-light {
-      background: transparent; color: rgba(255,255,255,.75);
-      border-color: rgba(255,255,255,.3);
-      padding: 6px 13px; font-size: 11px;
-    }
-    .btn-outline-light:hover {
-      background: rgba(255,255,255,.1); color: #fff;
-      border-color: rgba(255,255,255,.55);
-    }
-
-    /* Priorität-Buttons */
-    .rank-btn {
-      width: 32px; height: 32px;
-      border: 1.5px solid var(--border); background: var(--bg);
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px; font-weight: 500; color: var(--muted);
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background .1s, border-color .1s, color .1s;
-    }
-    .rank-btn:hover:not(.active-r1):not(.active-r2):not(.active-r3) {
-      border-color: var(--soft); color: var(--text); background: var(--surface);
-    }
+    .rank-btn { width: 32px; height: 32px; border: 1.5px solid var(--border); background: var(--bg); font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .1s, border-color .1s, color .1s; }
+    .rank-btn:hover:not(.active-r1):not(.active-r2):not(.active-r3) { border-color: var(--soft); color: var(--text); background: var(--surface); }
     .rank-btn.active-r1 { background: var(--r1); border-color: var(--r1); color: #fff; }
     .rank-btn.active-r2 { background: var(--r2); border-color: var(--r2); color: #fff; }
     .rank-btn.active-r3 { background: var(--r3); border-color: var(--r3); color: #fff; }
 
-    /* Priorität-Badge (Summary) */
-    .rank-badge {
-      width: 24px; height: 24px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0;
-    }
+    .rank-badge { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0; }
     .rank-badge.r1 { background: var(--r1); }
     .rank-badge.r2 { background: var(--r2); }
     .rank-badge.r3 { background: var(--r3); }
     .rank-badge.empty { background: var(--border); color: var(--muted); }
 
-    .alert {
-      display: flex; align-items: flex-start; gap: 9px;
-      padding: 10px 12px; font-size: 13px; border-left: 3px solid;
-    }
+    .alert { display: flex; align-items: flex-start; gap: 9px; padding: 10px 12px; font-size: 13px; border-left: 3px solid; }
     .alert-error   { background: var(--error-bg);   border-color: var(--error);   color: var(--error); }
     .alert-success { background: var(--success-bg); border-color: var(--success); color: var(--success); }
 
+    /* Seminar-Nummer */
+    .seminar-nr { display: inline-flex; align-items: center; padding: 1px 6px; background: var(--bg); border: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 500; color: var(--soft); margin-bottom: 5px; }
 
-    /* ══════════════════════════════════════════════════════════
-       SCREEN 1 — LOGIN (Split-Layout)
-    ══════════════════════════════════════════════════════════ */
+    /* PDF-Link */
+    .pdf-link { cursor: pointer; user-select: none; border: 1px solid var(--border-light); padding: 1px 6px; transition: border-color .12s, color .12s; }
+    .pdf-link:hover { border-color: var(--orange); color: var(--orange); }
 
+    /* Toast */
+    .pdf-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--dark); color: #fff; padding: 10px 20px; font-size: 12px; border-left: 3px solid var(--orange); pointer-events: none; opacity: 1; transition: opacity .3s; z-index: 100; white-space: nowrap; }
+    .pdf-toast.fade { opacity: 0; }
+
+    /* ── Screen 1 — Login ────────────────────────────────── */
     #screen-login { min-height: 100vh; display: flex; }
-
-    .login-left {
-      width: 44%; background: var(--orange);
-      display: flex; flex-direction: column;
-      padding: 56px 48px 48px;
-      position: relative; overflow: hidden;
-    }
-    .login-left::before {
-      content: '';
-      position: absolute; bottom: -80px; right: -80px;
-      width: 280px; height: 280px;
-      border: 48px solid rgba(255,255,255,.07); border-radius: 50%;
-      pointer-events: none;
-    }
-    .login-left::after {
-      content: '';
-      position: absolute; top: -40px; left: -40px;
-      width: 180px; height: 180px;
-      background: rgba(0,0,0,.08); pointer-events: none;
-    }
-
-    .login-left-content {
-      position: relative; z-index: 1;
-      flex: 1; display: flex; flex-direction: column;
-    }
-
+    .login-left { width: 44%; background: var(--orange); display: flex; flex-direction: column; padding: 56px 48px 48px; position: relative; overflow: hidden; }
+    .login-left::before { content: ''; position: absolute; bottom: -80px; right: -80px; width: 280px; height: 280px; border: 48px solid rgba(255,255,255,.07); border-radius: 50%; pointer-events: none; }
+    .login-left::after  { content: ''; position: absolute; top: -40px; left: -40px; width: 180px; height: 180px; background: rgba(0,0,0,.08); pointer-events: none; }
+    .login-left-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
     .htw-mark { margin-bottom: auto; }
-    .htw-square {
-      width: 54px; height: 54px;
-      background: rgba(0,0,0,.18);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 24px;
-    }
-    .htw-square span {
-      color: #fff; font-size: 14px; font-weight: 700; letter-spacing: .05em;
-    }
-    .htw-name-primary {
-      font-size: 26px; font-weight: 700; color: #fff;
-      letter-spacing: -.02em; line-height: 1.15; margin-bottom: 8px;
-    }
-    .htw-name-sub {
-      font-size: 13px; color: rgba(255,255,255,.7); line-height: 1.5;
-    }
-
-    .login-left-info {
-      border-top: 1px solid rgba(255,255,255,.2);
-      padding-top: 24px; margin-top: 48px;
-    }
-    .login-info-row {
-      display: flex; align-items: flex-start; gap: 10px;
-      font-size: 12px; color: rgba(255,255,255,.65);
-      margin-bottom: 8px; line-height: 1.4;
-    }
+    .htw-square { width: 54px; height: 54px; background: rgba(0,0,0,.18); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+    .htw-square span { color: #fff; font-size: 14px; font-weight: 700; letter-spacing: .05em; }
+    .htw-name-primary { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 8px; }
+    .htw-name-sub { font-size: 13px; color: rgba(255,255,255,.7); line-height: 1.5; }
+    .login-left-info { border-top: 1px solid rgba(255,255,255,.2); padding-top: 24px; margin-top: 48px; }
+    .login-info-row { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: rgba(255,255,255,.65); margin-bottom: 8px; line-height: 1.4; }
     .login-info-row:last-child { margin-bottom: 0; }
-    .login-info-dot {
-      width: 4px; height: 4px;
-      background: rgba(255,255,255,.45); flex-shrink: 0; margin-top: 5px;
-    }
-
-    .login-right {
-      flex: 1; background: var(--surface);
-      display: flex; align-items: center; justify-content: center;
-      padding: 48px 44px;
-    }
+    .login-info-dot { width: 4px; height: 4px; background: rgba(255,255,255,.45); flex-shrink: 0; margin-top: 5px; }
+    .login-right { flex: 1; background: var(--surface); display: flex; align-items: center; justify-content: center; padding: 48px 44px; }
     .login-form-box { width: 100%; max-width: 360px; }
-
-    .login-heading {
-      font-size: 22px; font-weight: 700;
-      letter-spacing: -.025em; margin-bottom: 6px;
-    }
-    .login-sub {
-      font-size: 13px; color: var(--soft); margin-bottom: 32px;
-      padding-left: 10px; border-left: 3px solid var(--orange); line-height: 1.4;
-    }
-
+    .login-heading { font-size: 22px; font-weight: 700; letter-spacing: -.025em; margin-bottom: 6px; }
+    .login-sub { font-size: 13px; color: var(--soft); margin-bottom: 32px; padding-left: 10px; border-left: 3px solid var(--orange); line-height: 1.4; }
     .field { margin-bottom: 18px; }
-    .field-label {
-      display: block; font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: .1em;
-      color: var(--soft); margin-bottom: 7px;
-    }
-
+    .field-label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--soft); margin-bottom: 7px; }
     .input-wrap { position: relative; }
-    .pw-toggle {
-      position: absolute; right: 10px; top: 50%;
-      transform: translateY(-50%);
-      background: none; border: none; cursor: pointer; color: var(--muted);
-      padding: 4px; display: flex; align-items: center;
-      transition: color .12s;
-    }
+    .pw-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--muted); padding: 4px; display: flex; align-items: center; transition: color .12s; }
     .pw-toggle:hover { color: var(--soft); }
     #passwort { padding-right: 38px; }
-
     .login-cta { margin-top: 28px; }
     .login-cta .btn { width: 100%; padding: 12px; font-size: 12px; }
-    .login-hint {
-      text-align: center; font-size: 11px; color: var(--muted);
-      margin-top: 20px; font-family: 'IBM Plex Mono', monospace;
-    }
+    .login-hint { text-align: center; font-size: 11px; color: var(--muted); margin-top: 20px; font-family: 'IBM Plex Mono', monospace; }
 
     @media (max-width: 700px) {
       #screen-login { flex-direction: column; }
@@ -268,119 +119,52 @@
       .login-right { padding: 36px 24px 56px; align-items: flex-start; }
     }
 
-
-    /* ══════════════════════════════════════════════════════════
-       SCREEN 2 — EINSCHREIBUNG
-    ══════════════════════════════════════════════════════════ */
-
+    /* ── Screen 2 — Einschreibung ────────────────────────── */
     #screen-enrollment { display: none; min-height: 100vh; flex-direction: column; }
 
-    /* Header */
-    .enroll-header {
-      position: sticky; top: 0; z-index: 20;
-      background: var(--dark); border-bottom: 3px solid var(--orange);
-    }
-    .enroll-header-inner {
-      max-width: 1100px; margin: 0 auto;
-      padding: 0 24px; height: 54px;
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    }
+    .enroll-header { position: sticky; top: 0; z-index: 20; background: var(--dark); border-bottom: 3px solid var(--orange); }
+    .enroll-header-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .header-brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
-    .header-logo-box {
-      width: 34px; height: 34px; background: var(--orange);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
+    .header-logo-box { width: 34px; height: 34px; background: var(--orange); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .header-logo-box span { color: #fff; font-size: 9px; font-weight: 700; letter-spacing: .05em; }
     .header-sep { width: 1px; height: 24px; background: rgba(255,255,255,.15); flex-shrink: 0; }
     .header-ctx { min-width: 0; }
-    .header-title {
-      font-size: 13px; font-weight: 600; color: #fff; letter-spacing: -.005em;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .header-meta {
-      font-size: 10px; color: rgba(255,255,255,.4);
-      text-transform: uppercase; letter-spacing: .08em; margin-top: 1px;
-    }
+    .header-title { font-size: 13px; font-weight: 600; color: #fff; letter-spacing: -.005em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-meta { font-size: 10px; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .08em; margin-top: 1px; }
     .header-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
     .header-user { text-align: right; }
-    .header-user-name {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px; font-weight: 500; color: #fff;
-    }
+    .header-user-name { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #fff; }
     .header-user-role { font-size: 10px; color: rgba(255,255,255,.4); margin-top: 1px; }
 
-    @media (max-width: 540px) {
-      .header-user { display: none; }
-      .header-sep  { display: none; }
-      .header-meta { display: none; }
-    }
+    @media (max-width: 540px) { .header-user { display: none; } .header-sep { display: none; } .header-meta { display: none; } }
 
-    /* Fristleiste */
     .frist-bar { background: var(--surface); border-bottom: 1px solid var(--border-light); }
-    .frist-bar-inner {
-      max-width: 1100px; margin: 0 auto;
-      padding: 7px 24px;
-      display: flex; align-items: center; gap: 10px;
-      font-size: 12px; color: var(--soft);
-    }
+    .frist-bar-inner { max-width: 1100px; margin: 0 auto; padding: 7px 24px; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--soft); }
     .frist-dot { width: 7px; height: 7px; background: #22a349; flex-shrink: 0; }
 
-    /* Haupt-Grid */
-    .enroll-main {
-      flex: 1; max-width: 1100px; margin: 0 auto; width: 100%;
-      padding: 28px 24px 80px;
-      display: grid; grid-template-columns: 1fr 282px;
-      gap: 28px; align-items: start;
-    }
+    .enroll-main { flex: 1; max-width: 1100px; margin: 0 auto; width: 100%; padding: 28px 24px 80px; display: grid; grid-template-columns: 1fr 282px; gap: 28px; align-items: start; }
 
     @media (max-width: 920px) {
-      .enroll-main {
-        display: flex; flex-direction: column;
-        padding: 20px 16px 72px; gap: 20px;
-      }
+      .enroll-main { display: flex; flex-direction: column; padding: 20px 16px 72px; gap: 20px; }
       .module-col  { order: 2; }
       .summary-col { order: 1; }
     }
 
-    .section-label {
-      font-size: 12px; font-weight: 600;
-      color: var(--soft);
-      margin-bottom: 12px;
-      padding-left: 10px;
-      border-left: 3px solid var(--orange);
-      line-height: 1.3;
-    }
+    .section-label { font-size: 12px; font-weight: 600; color: var(--soft); margin-bottom: 12px; padding-left: 10px; border-left: 3px solid var(--orange); line-height: 1.3; }
 
-    /* Modulliste */
-    .module-list {
-      background: var(--surface);
-      border: 1px solid var(--border); border-top: 2px solid var(--dark);
-    }
-
-    .module-row {
-      display: grid; grid-template-columns: 1fr auto;
-      gap: 16px; padding: 15px 18px;
-      border-bottom: 1px solid var(--border-light);
-      border-left: 4px solid transparent;
-      transition: border-left-color .15s, background .1s;
-    }
+    .module-list { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--dark); }
+    .module-row { display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 15px 18px; border-bottom: 1px solid var(--border-light); border-left: 4px solid transparent; transition: border-left-color .15s, background .1s; }
     .module-row:last-child { border-bottom: none; }
     .module-row:hover { background: #FAFAFA; }
-
-    /* Orange-Familie für alle Prioritätsstufen */
     .module-row.rank-1 { border-left-color: var(--r1); background: #FFFBF9; }
     .module-row.rank-2 { border-left-color: var(--r2); background: #FBF7F5; }
     .module-row.rank-3 { border-left-color: var(--r3); background: #F8F4F2; }
 
     .module-name { font-size: 14px; font-weight: 600; line-height: 1.3; margin-bottom: 5px; }
-    .module-tags { display: flex; align-items: center; gap: 14px; margin-bottom: 7px; }
-    .module-tag {
-      font-size: 11px; color: var(--muted);
-      display: flex; align-items: center; gap: 4px;
-    }
+    .module-tags { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; flex-wrap: wrap; }
+    .module-tag { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
     .module-tag svg { flex-shrink: 0; }
     .module-desc { font-size: 12px; color: var(--soft); line-height: 1.65; }
-
     .row-ranks { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; padding-top: 1px; }
 
     @media (max-width: 540px) {
@@ -389,185 +173,70 @@
       .rank-btn   { width: 40px; height: 40px; font-size: 14px; }
     }
 
-    /* Motivationsblock — volle Breite, erscheint oben sobald Erstwunsch gesetzt */
-    .motiv-block {
-      overflow: hidden; max-height: 0;
-      transition: max-height .35s cubic-bezier(.2,0,0,1), margin-bottom .2s;
-      margin-bottom: 0;
-    }
-    .motiv-block.open {
-      max-height: 320px;
-      margin-bottom: 20px;
-    }
-
-    .motiv-block-inner {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-top: 2px solid var(--orange);
-      padding: 18px 20px 16px;
-    }
-
-    .motiv-block-head {
-      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
-    }
-    .motiv-block-title {
-      font-size: 12px; font-weight: 600;
-      color: var(--orange);
-    }
-    .motiv-block-module {
-      font-size: 12px; color: var(--soft);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    #motivText {
-      display: block; width: 100%;
-      padding: 10px 12px;
-      font-family: inherit; font-size: 13px; line-height: 1.7;
-      color: var(--text); background: var(--bg);
-      border: 1.5px solid var(--border); border-radius: 0;
-      resize: vertical; min-height: 110px;
-      outline: none; transition: border-color .12s;
-    }
+    /* Motivationsblock */
+    .motiv-block { overflow: hidden; max-height: 0; transition: max-height .35s cubic-bezier(.2,0,0,1), margin-bottom .2s; margin-bottom: 0; }
+    .motiv-block.open { max-height: 320px; margin-bottom: 20px; }
+    .motiv-block-inner { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--orange); padding: 18px 20px 16px; }
+    .motiv-block-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .motiv-block-title { font-size: 12px; font-weight: 600; color: var(--orange); }
+    .motiv-block-module { font-size: 12px; color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #motivText { display: block; width: 100%; padding: 10px 12px; font-family: inherit; font-size: 13px; line-height: 1.7; color: var(--text); background: var(--bg); border: 1.5px solid var(--border); border-radius: 0; resize: vertical; min-height: 110px; outline: none; transition: border-color .12s; }
     #motivText::placeholder { color: var(--muted); }
-    #motivText:focus {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 3px rgba(224,90,28,.12);
-    }
-
-    .char-counter {
-      text-align: right;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px; color: var(--muted); margin-top: 5px;
-    }
+    #motivText:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(224,90,28,.12); }
+    .char-counter { text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 5px; }
     .char-counter.warn { color: var(--orange); font-weight: 500; }
 
-    /* Summary-Panel */
-    .summary-panel {
-      background: var(--surface);
-      border: 1px solid var(--border); border-top: 2px solid var(--dark);
-      position: sticky; top: 62px;
-    }
+    /* Summary */
+    .summary-panel { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--dark); position: sticky; top: 62px; }
     @media (max-width: 920px) { .summary-panel { position: static; } }
-
-    .summary-header {
-      background: var(--dark); padding: 11px 16px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .summary-header-label {
-      font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.85);
-    }
-    .summary-count {
-      margin-left: auto;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px; color: rgba(255,255,255,.4);
-    }
-
+    .summary-header { background: var(--dark); padding: 11px 16px; display: flex; align-items: center; gap: 8px; }
+    .summary-header-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.85); }
+    .summary-count { margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: rgba(255,255,255,.4); }
     @media (max-width: 920px) {
       .summary-toggle { cursor: pointer; user-select: none; }
       .summary-toggle svg { transition: transform .2s; }
       .summary-toggle.collapsed svg { transform: rotate(-90deg); }
-      .summary-collapsible {
-        overflow: hidden; transition: max-height .25s cubic-bezier(.2,0,0,1);
-      }
+      .summary-collapsible { overflow: hidden; transition: max-height .25s cubic-bezier(.2,0,0,1); }
       .summary-collapsible.collapsed { max-height: 0 !important; }
     }
-
-    .summary-slots {
-      padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;
-      border-bottom: 1px solid var(--border-light);
-    }
+    .summary-slots { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid var(--border-light); }
     .summary-slot { display: flex; align-items: center; gap: 10px; }
     .slot-content { flex: 1; min-width: 0; }
-    .slot-rank-label {
-      font-size: 10px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 2px;
-    }
-    .slot-value {
-      font-size: 12px; font-weight: 500;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
+    .slot-rank-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 2px; }
+    .slot-value { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .slot-value.empty { color: var(--muted); font-weight: 400; font-style: italic; }
-
-    /* Submit */
     .submit-area { padding: 14px 16px; }
     .submit-area .btn { width: 100%; padding: 12px; font-size: 12px; }
     #valMsg { margin-top: 10px; }
 
-    /* Admin-Demo-Link (Footer) */
-    .admin-link-bar {
-      text-align: center; padding: 24px;
-      font-size: 11px; color: var(--muted);
-    }
-    .admin-link-bar a {
-      color: var(--muted); text-decoration: none;
-      border-bottom: 1px dashed var(--border);
-      transition: color .12s;
-    }
+    .admin-link-bar { text-align: center; padding: 24px; font-size: 11px; color: var(--muted); }
+    .admin-link-bar a { color: var(--muted); text-decoration: none; border-bottom: 1px dashed var(--border); transition: color .12s; }
     .admin-link-bar a:hover { color: var(--soft); }
 
-
-    /* ══════════════════════════════════════════════════════════
-       OVERLAY — BESTÄTIGUNG
-    ══════════════════════════════════════════════════════════ */
-
-    #overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,.55); z-index: 50;
-      align-items: center; justify-content: center; padding: 20px;
-    }
-
-    .confirm-box {
-      background: var(--surface); max-width: 440px; width: 100%;
-      border-top: 4px solid var(--orange);
-      animation: slideUp .2s cubic-bezier(.2,0,0,1);
-    }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
+    /* Overlay */
+    #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
+    .confirm-box { background: var(--surface); max-width: 440px; width: 100%; border-top: 4px solid var(--orange); animation: slideUp .2s cubic-bezier(.2,0,0,1); }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .confirm-top { padding: 24px 24px 20px; border-bottom: 1px solid var(--border-light); }
-    .confirm-icon {
-      width: 40px; height: 40px; background: var(--success-bg);
-      display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
-    }
+    .confirm-icon { width: 40px; height: 40px; background: var(--success-bg); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
     .confirm-icon svg { color: var(--success); }
     .confirm-title { font-size: 18px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 6px; }
     .confirm-sub  { font-size: 13px; color: var(--soft); line-height: 1.6; }
-
-    .confirm-list {
-      padding: 20px 24px; display: flex; flex-direction: column; gap: 14px;
-      border-bottom: 1px solid var(--border-light);
-    }
+    .confirm-list { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; border-bottom: 1px solid var(--border-light); }
     .confirm-row { display: flex; align-items: flex-start; gap: 12px; }
     .confirm-module { font-size: 13px; font-weight: 600; }
-    .confirm-ranklabel {
-      font-size: 10px; text-transform: uppercase;
-      letter-spacing: .08em; color: var(--muted); margin-top: 2px;
-    }
-    .confirm-motiv {
-      font-size: 11px; color: var(--soft); font-style: italic;
-      margin-top: 4px; line-height: 1.6;
-    }
-
-    .confirm-footer {
-      padding: 16px 24px;
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    }
+    .confirm-ranklabel { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-top: 2px; }
+    .confirm-motiv { font-size: 11px; color: var(--soft); font-style: italic; margin-top: 4px; line-height: 1.6; }
+    .confirm-footer { padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .confirm-ts { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); }
     .confirm-footer .btn { padding: 9px 20px; }
-
   </style>
 </head>
 
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN 1 — LOGIN
-═══════════════════════════════════════════════════════════ -->
+<!-- ═══════════════ SCREEN 1 — LOGIN ═══════════════ -->
 <div id="screen-login">
-
   <div class="login-left">
     <div class="login-left-content">
       <div class="htw-mark">
@@ -576,74 +245,46 @@
         <div class="htw-name-sub">Hochschule für Technik und Wirtschaft Dresden</div>
       </div>
       <div class="login-left-info">
-        <div class="login-info-row">
-          <div class="login-info-dot"></div>
-          Wahlpflichtmodul-Einschreibung WS&nbsp;2026/27
-        </div>
-        <div class="login-info-row">
-          <div class="login-info-dot"></div>
-          Einschreibefrist: 30.&nbsp;November 2026, 23:59&nbsp;Uhr
-        </div>
-        <div class="login-info-row">
-          <div class="login-info-dot"></div>
-          Studierende Wirtschaftsinformatik, 5./6.&nbsp;Sem.
-        </div>
+        <div class="login-info-row"><div class="login-info-dot"></div>Projektseminar-Einschreibung WS&nbsp;2026/27</div>
+        <div class="login-info-row"><div class="login-info-dot"></div>Einschreibefrist: 30.&nbsp;November 2026, 23:59&nbsp;Uhr</div>
+        <div class="login-info-row"><div class="login-info-dot"></div>4.&nbsp;Bachelorsemester, 6.&nbsp;Diplomsemester, Wiederholer</div>
       </div>
     </div>
   </div>
 
   <div class="login-right">
     <div class="login-form-box">
-
       <div class="login-heading">Anmelden</div>
-      <div class="login-sub">Mit HTW-Infrastrukturkonto anmelden</div>
-
+      <div class="login-sub">Mit HTW-Infrastrukturkonto (LDAP) anmelden</div>
       <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
-
         <div id="loginErr" class="alert alert-error hide" style="margin-bottom:16px;">
-          <svg style="width:14px;height:14px;flex-shrink:0;margin-top:1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
+          <svg style="width:14px;height:14px;flex-shrink:0;margin-top:1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           <span>Ungültige s-Nummer oder falsches Passwort.</span>
         </div>
-
         <div class="field">
           <label class="field-label" for="sNummer">s-Nummer</label>
-          <input class="input" id="sNummer" type="text"
-                 placeholder="z. B. s88618"
-                 autocomplete="username" spellcheck="false">
+          <input class="input" id="sNummer" type="text" placeholder="z. B. s88618" autocomplete="username" spellcheck="false">
         </div>
-
         <div class="field">
           <label class="field-label" for="passwort">Passwort</label>
           <div class="input-wrap">
-            <input class="input" id="passwort" type="password"
-                   placeholder="HTW-Infrastrukturpasswort"
-                   autocomplete="current-password">
+            <input class="input" id="passwort" type="password" placeholder="HTW-Infrastrukturpasswort" autocomplete="current-password">
             <button type="button" class="pw-toggle" onclick="togglePwVis()">
-              <svg id="pwEyeIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
+              <svg id="pwEyeIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
         </div>
-
         <div class="login-cta">
           <button type="submit" class="btn btn-primary">Anmelden</button>
         </div>
-
       </form>
-
       <div class="login-hint">Simulierter Login · Beliebige Eingabe akzeptiert</div>
     </div>
   </div>
 </div>
 
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN 2 — EINSCHREIBUNG
-═══════════════════════════════════════════════════════════ -->
+<!-- ═══════════════ SCREEN 2 — EINSCHREIBUNG ═══════════════ -->
 <div id="screen-enrollment">
 
   <header class="enroll-header">
@@ -652,7 +293,7 @@
         <div class="header-logo-box"><span>HTW</span></div>
         <div class="header-sep"></div>
         <div class="header-ctx">
-          <div class="header-title">Wahlpflichtmodul-Einschreibung</div>
+          <div class="header-title">Projektseminar-Einschreibung</div>
           <div class="header-meta">WS&nbsp;2026/27 · HTW Dresden</div>
         </div>
       </div>
@@ -662,11 +303,7 @@
           <div class="header-user-role">Wirtschaftsinformatik</div>
         </div>
         <button class="btn btn-outline-light" onclick="handleLogout()">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Abmelden
         </button>
       </div>
@@ -676,109 +313,77 @@
   <div class="frist-bar">
     <div class="frist-bar-inner">
       <div class="frist-dot"></div>
-      <span>Anmeldefrist aktiv: <strong>30. November 2026, 23:59 Uhr</strong>
-            &nbsp;·&nbsp; Änderungen bis Fristende möglich</span>
+      <span>Anmeldefrist aktiv: <strong>30. November 2026, 23:59 Uhr</strong>&nbsp;·&nbsp; Änderungen bis Fristende möglich</span>
     </div>
   </div>
 
   <div class="enroll-main">
-
-    <!-- Module + Motivationsschreiben -->
     <div class="module-col">
-
-      <!-- Motivationsschreiben: erscheint oben sobald Erstwunsch gesetzt, schiebt Module nach unten -->
       <div class="motiv-block" id="motivSection">
         <div class="motiv-block-inner">
           <div class="motiv-block-head">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-            </svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
             <span class="motiv-block-title">Motivationsschreiben — Erstwunsch</span>
             <span class="motiv-block-module" id="motivModulLabel">—</span>
           </div>
-          <textarea id="motivText" maxlength="500"
-                    placeholder="Warum ist dieses Modul dein Erstwunsch? (max. 500 Zeichen)"
-                    oninput="onMotivInput()"></textarea>
+          <textarea id="motivText" maxlength="500" placeholder="Warum ist dieses Projektseminar dein Erstwunsch? (max. 500 Zeichen)" oninput="onMotivInput()"></textarea>
           <div class="char-counter" id="charCount">0 / 500</div>
         </div>
       </div>
 
-      <div class="section-label">Verfügbare Module — Priorität setzen</div>
+      <div class="section-label">Verfügbare Projektseminare — Priorität setzen</div>
       <div class="module-list" id="moduleList"></div>
     </div>
 
-    <!-- Summary-Panel -->
     <div class="summary-col">
-      <div class="section-label">Deine Einschreibung</div>
-
+      <div class="section-label">Deine Bewerbung</div>
       <div class="summary-panel">
         <div class="summary-header summary-toggle" id="summaryToggle" onclick="toggleSummary()">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           <span class="summary-header-label">Auswahl</span>
           <span class="summary-count mono" id="summaryCount">0&thinsp;/&thinsp;3</span>
         </div>
-
         <div class="summary-collapsible" id="summaryCollapsible">
-
           <div class="summary-slots">
             <div class="summary-slot">
               <div class="rank-badge r1">1</div>
-              <div class="slot-content">
-                <div class="slot-rank-label">Erstwunsch</div>
-                <div class="slot-value empty" id="slot1">nicht gewählt</div>
-              </div>
+              <div class="slot-content"><div class="slot-rank-label">Erstwunsch</div><div class="slot-value empty" id="slot1">nicht gewählt</div></div>
             </div>
             <div class="summary-slot">
               <div class="rank-badge r2">2</div>
-              <div class="slot-content">
-                <div class="slot-rank-label">Zweitwunsch</div>
-                <div class="slot-value empty" id="slot2">nicht gewählt</div>
-              </div>
+              <div class="slot-content"><div class="slot-rank-label">Zweitwunsch</div><div class="slot-value empty" id="slot2">nicht gewählt</div></div>
             </div>
             <div class="summary-slot">
               <div class="rank-badge r3">3</div>
-              <div class="slot-content">
-                <div class="slot-rank-label">Drittwunsch</div>
-                <div class="slot-value empty" id="slot3">nicht gewählt</div>
-              </div>
+              <div class="slot-content"><div class="slot-rank-label">Drittwunsch</div><div class="slot-value empty" id="slot3">nicht gewählt</div></div>
             </div>
           </div>
-
           <div class="submit-area">
-            <button class="btn btn-primary" id="submitBtn" onclick="handleSubmit()" disabled>
-              Einschreiben
-            </button>
+            <button class="btn btn-primary" id="submitBtn" onclick="handleSubmit()" disabled>Bewerbung einreichen</button>
             <div class="alert alert-error hide" id="valMsg"></div>
           </div>
-
         </div>
       </div>
     </div>
-
   </div>
 
-  <div class="admin-link-bar">
-    <a href="admin.html">Admin-Ansicht (Prototype)</a>
-  </div>
-
+  <div class="admin-link-bar"><a href="admin.html">Admin-Ansicht (Prototype)</a></div>
 </div>
 
 
-<!-- ═══════════════════════════════════════════════════════════
-     OVERLAY — BESTÄTIGUNG
-═══════════════════════════════════════════════════════════ -->
+<!-- Toast PDF-Demo -->
+<div class="pdf-toast hide" id="pdfToast"></div>
+
+
+<!-- ═══════════════ OVERLAY — BESTÄTIGUNG ═══════════════ -->
 <div id="overlay">
   <div class="confirm-box">
     <div class="confirm-top">
       <div class="confirm-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <div class="confirm-title">Einschreibung eingegangen</div>
-      <div class="confirm-sub">Deine Modulwahl wurde erfolgreich gespeichert. Änderungen sind bis zum Fristende jederzeit möglich.</div>
+      <div class="confirm-title">Bewerbung eingegangen</div>
+      <div class="confirm-sub">Deine Seminarbewerbung wurde erfolgreich gespeichert. Änderungen sind bis zum Fristende jederzeit möglich.</div>
     </div>
     <div class="confirm-list" id="confirmList"></div>
     <div class="confirm-footer">
@@ -790,16 +395,16 @@
 
 
 <script>
-// ── Moduldaten ──────────────────────────────────────────────────────────────
+// ── Seminardaten ────────────────────────────────────────────────────────────
 const MODULE = [
-  { id: 'ml-ki',  name: 'Maschinelles Lernen und KI',              cp: '5 CP', sem: '5./6. Sem.', desc: 'Grundlagen überwachten und unüberwachten Lernens, neuronale Netze, Python/scikit-learn. Schwerpunkt auf praktischer Umsetzung realer Datensätze.' },
-  { id: 'web',    name: 'Web-Technologien und Cloud-Architekturen', cp: '5 CP', sem: '5./6. Sem.', desc: 'Moderne Frontend-Frameworks, REST- und GraphQL-APIs, Cloud-Deployment auf AWS/Azure, CI/CD-Pipelines.' },
-  { id: 'db',     name: 'Datenbanksysteme (Vertiefung)',            cp: '5 CP', sem: '5./6. Sem.', desc: 'Query-Optimierung, verteilte Datenbanken, NoSQL-Systeme (MongoDB, Redis), Datenbankdesign für Hochlastsysteme.' },
-  { id: 'sec',    name: 'IT-Sicherheit und Datenschutz',            cp: '5 CP', sem: '5./6. Sem.', desc: 'Angriffsvektoren und Gegenmaßnahmen, DSGVO-konforme Systementwicklung, Penetrationstests, Security by Design.' },
-  { id: 'agile',  name: 'Agile Softwareentwicklung',                cp: '5 CP', sem: '5./6. Sem.', desc: 'Scrum und Kanban in der Praxis, teambasiertes Semesterprojekt mit echtem Product Backlog, Retrospektiven und Demos.' },
-  { id: 'entre',  name: 'Entrepreneurship und Digitalisierung',     cp: '5 CP', sem: '5./6. Sem.', desc: 'Geschäftsmodelle für digitale Produkte, Lean Startup, MVP-Entwicklung, Pitching und Finanzierungsgrundlagen.' },
-  { id: 'qa',     name: 'Softwarequalität und Testing',             cp: '5 CP', sem: '5./6. Sem.', desc: 'Teststrategie, TDD/BDD, automatisierte Tests, Code-Reviews, statische Analyse und kontinuierliche Qualitätssicherung.' },
-  { id: 'pm',     name: 'Projektmanagement in der IT',              cp: '5 CP', sem: '5./6. Sem.', desc: 'Klassisches und agiles Projektmanagement, Risikoanalyse, Ressourcenplanung, Zertifizierungsgrundlagen (IPMA/PMP).' },
+  { id: 'ml-ki',  nr: 'PS-01', name: 'Machine Learning in der Praxis',    prof: 'Prof. Dr. Haubner', cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Grundlagen überwachten und unüberwachten Lernens, neuronale Netze, Python/scikit-learn. Schwerpunkt auf praktischer Umsetzung realer Datensätze.' },
+  { id: 'web',    nr: 'PS-02', name: 'Cloud-native Softwareentwicklung',   prof: 'Prof. Dr. Koch',    cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Moderne Frontend-Frameworks, REST- und GraphQL-APIs, Cloud-Deployment auf AWS/Azure, CI/CD-Pipelines und Container-Orchestrierung.' },
+  { id: 'db',     nr: 'PS-03', name: 'Datenbanken und Big Data',           prof: 'Prof. Dr. Braun',   cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Query-Optimierung, verteilte Datenbanken, NoSQL-Systeme (MongoDB, Redis), Datenbankdesign für Hochlastsysteme.' },
+  { id: 'sec',    nr: 'PS-04', name: 'IT-Sicherheit und Compliance',       prof: 'Prof. Dr. Fischer', cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Angriffsvektoren und Gegenmaßnahmen, DSGVO-konforme Systementwicklung, Penetrationstests, Security by Design.' },
+  { id: 'agile',  nr: 'PS-05', name: 'Agile Softwareentwicklung',          prof: 'Prof. Dr. Schmidt', cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Scrum und Kanban in der Praxis, teambasiertes Semesterprojekt mit echtem Product Backlog, Retrospektiven und Demos.' },
+  { id: 'entre',  nr: 'PS-06', name: 'Digital Entrepreneurship',           prof: 'Prof. Dr. Weber',   cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Geschäftsmodelle für digitale Produkte, Lean Startup, MVP-Entwicklung, Pitching und Finanzierungsgrundlagen.' },
+  { id: 'qa',     nr: 'PS-07', name: 'Software Quality Engineering',       prof: 'Prof. Dr. Meier',   cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Teststrategie, TDD/BDD, automatisierte Tests, Code-Reviews, statische Analyse und kontinuierliche Qualitätssicherung.' },
+  { id: 'pm',     nr: 'PS-08', name: 'IT-Projektmanagement in der Praxis', prof: 'Prof. Dr. Müller',  cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Klassisches und agiles Projektmanagement, Risikoanalyse, Ressourcenplanung, Zertifizierungsgrundlagen (IPMA/PMP).' },
 ];
 
 const RANK_LABEL = { 1: 'Erstwunsch', 2: 'Zweitwunsch', 3: 'Drittwunsch' };
@@ -817,23 +422,15 @@ function handleLogin(e) {
   const pass  = document.getElementById('passwort').value;
   const errEl = document.getElementById('loginErr');
   const input = document.getElementById('sNummer');
-
   if (!sNr || !pass || !/^s?\d{3,}/i.test(sNr)) {
-    errEl.classList.remove('hide');
-    input.classList.add('has-error');
-    return;
+    errEl.classList.remove('hide'); input.classList.add('has-error'); return;
   }
-
-  errEl.classList.add('hide');
-  input.classList.remove('has-error');
-
+  errEl.classList.add('hide'); input.classList.remove('has-error');
   const normalised = /^\d/.test(sNr) ? 's' + sNr.toLowerCase() : sNr.toLowerCase();
   document.getElementById('userDisplay').textContent = normalised.toUpperCase();
-
   document.getElementById('screen-login').style.display      = 'none';
   document.getElementById('screen-enrollment').style.display = 'flex';
   document.getElementById('screen-enrollment').style.flexDirection = 'column';
-
   if (!listBuilt) { buildList(); listBuilt = true; }
 }
 
@@ -850,13 +447,11 @@ function togglePwVis() {
   const show  = input.type === 'password';
   input.type  = show ? 'text' : 'password';
   document.getElementById('pwEyeIco').innerHTML = show
-    ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-       <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-       <line x1="1" y1="1" x2="23" y2="23"/>`
+    ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`
     : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
 }
 
-// ── Modulliste aufbauen ────────────────────────────────────────────────────
+// ── Seminarliste aufbauen ──────────────────────────────────────────────────
 function buildList() {
   const container = document.getElementById('moduleList');
   MODULE.forEach(m => {
@@ -865,35 +460,45 @@ function buildList() {
     row.className = 'module-row';
     row.innerHTML = `
       <div>
+        <div class="seminar-nr">${m.nr}</div>
         <div class="module-name">${m.name}</div>
         <div class="module-tags">
           <span class="module-tag">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-            </svg>
-            ${m.cp}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            ${m.prof}
           </span>
           <span class="module-tag">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             ${m.sem}
+          </span>
+          <span class="module-tag pdf-link" onclick="openPdf('${m.name}')">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Beschreibung (PDF)
           </span>
         </div>
         <div class="module-desc">${m.desc}</div>
       </div>
       <div class="row-ranks">
         ${[1,2,3].map(r => `
-          <button id="rbtn-${m.id}-${r}" class="rank-btn"
-                  onclick="assign('${m.id}',${r})"
-                  title="${RANK_LABEL[r]}">${r}</button>
+          <button id="rbtn-${m.id}-${r}" class="rank-btn" onclick="assign('${m.id}',${r})" title="${RANK_LABEL[r]}">${r}</button>
         `).join('')}
       </div>
     `;
     container.appendChild(row);
   });
+}
+
+// ── PDF-Demo Toast ─────────────────────────────────────────────────────────
+let toastTimer = null;
+function openPdf(name) {
+  const toast = document.getElementById('pdfToast');
+  toast.textContent = 'Beschreibung wird geöffnet: ' + name + ' (Demo)';
+  toast.classList.remove('hide', 'fade');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.add('fade');
+    setTimeout(() => toast.classList.add('hide'), 300);
+  }, 2500);
 }
 
 // ── Zuweisung ──────────────────────────────────────────────────────────────
@@ -922,15 +527,12 @@ function updateRow(m) {
   if (!row) return;
   const rank = state[m.id];
   row.className = 'module-row' + (rank ? ' rank-' + rank : '');
-
   [1,2,3].forEach(r => {
     const btn = document.getElementById(`rbtn-${m.id}-${r}`);
     if (!btn) return;
     const isActive     = rank === r;
     const takenByOther = byRank(r) !== null && !isActive;
-
-    btn.className    = 'rank-btn' + (isActive ? ' active-r' + r : '');
-    // Button ausblenden wenn diese Priorität bereits woanders vergeben ist
+    btn.className     = 'rank-btn' + (isActive ? ' active-r' + r : '');
     btn.style.display = takenByOther ? 'none' : '';
   });
 }
@@ -953,8 +555,7 @@ function updateMotiv() {
   const erstId  = byRank(1);
   const section = document.getElementById('motivSection');
   if (erstId) {
-    document.getElementById('motivModulLabel').textContent =
-      MODULE.find(x => x.id === erstId).name;
+    document.getElementById('motivModulLabel').textContent = MODULE.find(x => x.id === erstId).name;
     section.classList.add('open');
   } else {
     section.classList.remove('open');
@@ -965,8 +566,7 @@ function updateMotiv() {
 }
 
 function updateSubmit() {
-  document.getElementById('submitBtn').disabled =
-    ![1,2,3].every(r => byRank(r) !== null);
+  document.getElementById('submitBtn').disabled = ![1,2,3].every(r => byRank(r) !== null);
 }
 
 function updateCount() {
@@ -981,7 +581,6 @@ function onMotivInput() {
   el.classList.toggle('warn', len > 440);
 }
 
-// ── Mobile Summary Toggle ──────────────────────────────────────────────────
 function toggleSummary() {
   if (window.innerWidth > 920) return;
   summaryOpen = !summaryOpen;
@@ -996,11 +595,10 @@ window.addEventListener('load', () => {
   if (col) col.style.maxHeight = col.scrollHeight + 'px';
 });
 
-// ── Submit ─────────────────────────────────────────────────────────────────
 function handleSubmit() {
   const valMsg = document.getElementById('valMsg');
   if (![1,2,3].every(r => byRank(r) !== null)) {
-    valMsg.textContent = 'Bitte vergib Priorität 1, 2 und 3 für je ein Modul.';
+    valMsg.textContent = 'Bitte vergib Priorität 1, 2 und 3 für je ein Projektseminar.';
     valMsg.classList.remove('hide');
     return;
   }
@@ -1011,7 +609,6 @@ function handleSubmit() {
 function showConfirm() {
   const motiv = document.getElementById('motivText').value.trim();
   const list  = document.getElementById('confirmList');
-
   list.innerHTML = [1,2,3].map(r => {
     const m     = MODULE.find(x => x.id === byRank(r));
     const extra = r === 1 && motiv
@@ -1027,12 +624,10 @@ function showConfirm() {
         </div>
       </div>`;
   }).join('');
-
   const now = new Date();
   document.getElementById('confirmTs').textContent =
     now.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
     ', ' + now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-
   document.getElementById('overlay').style.display = 'flex';
 }
 
