@@ -144,6 +144,11 @@
       .data-table th:nth-child(5), .data-table td:nth-child(5) { display: none; }
       .data-table th:nth-child(8), .data-table td:nth-child(8) { display: none; }
     }
+
+    /* Prototyp-Hinweis */
+    .proto-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: var(--dark); color: rgba(255,255,255,.72); border-top: 2px solid var(--orange); padding: 7px 16px; font-size: 11px; line-height: 1.4; text-align: center; }
+    .proto-bar strong { color: #fff; font-weight: 600; }
+    .proto-bar a { color: var(--orange); text-decoration: none; border-bottom: 1px dotted rgba(224,90,28,.6); }
   </style>
 </head>
 
@@ -425,5 +430,12 @@ function handleZuteilungBestaetigen() {
 renderModuleTable();
 renderStudentTable();
 </script>
+
+<!-- Prototyp-Hinweis -->
+<div class="proto-bar">
+  <strong>Prototyp zur Anforderungsvalidierung</strong> &mdash; HTW Dresden, Projektseminar Agentic Engineering WS&nbsp;2026/27.
+  Alle Bewerbungen, s-Nummern und Motivationstexte sind frei erfundene Beispieldaten. Kein Backend, keine Anmeldung.
+  <a href="https://github.com/etienne-mathis/seminar-enrollment-prototype">Quellcode</a>
+</div>
 </body>
 </html>

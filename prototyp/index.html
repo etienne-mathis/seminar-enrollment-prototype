@@ -53,6 +53,8 @@
 
     .rank-btn { width: 32px; height: 32px; border: 1.5px solid var(--border); background: var(--bg); font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .1s, border-color .1s, color .1s; }
     .rank-btn:hover:not(.active-r1):not(.active-r2):not(.active-r3) { border-color: var(--soft); color: var(--text); background: var(--surface); }
+    .rank-btn.taken { border-style: dashed; border-color: var(--border-light); color: var(--border); }
+    .rank-btn.taken:hover { border-style: solid; border-color: var(--soft); color: var(--text); background: var(--surface); }
     .rank-btn.active-r1 { background: var(--r1); border-color: var(--r1); color: #fff; }
     .rank-btn.active-r2 { background: var(--r2); border-color: var(--r2); color: #fff; }
     .rank-btn.active-r3 { background: var(--r3); border-color: var(--r3); color: #fff; }
@@ -74,8 +76,13 @@
     .pdf-link { cursor: pointer; user-select: none; border: 1px solid var(--border-light); padding: 1px 6px; transition: border-color .12s, color .12s; }
     .pdf-link:hover { border-color: var(--orange); color: var(--orange); }
 
+    /* Prototyp-Hinweis */
+    .proto-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: var(--dark); color: rgba(255,255,255,.72); border-top: 2px solid var(--orange); padding: 7px 16px; font-size: 11px; line-height: 1.4; text-align: center; }
+    .proto-bar strong { color: #fff; font-weight: 600; }
+    .proto-bar a { color: var(--orange); text-decoration: none; border-bottom: 1px dotted rgba(224,90,28,.6); }
+
     /* Toast */
-    .pdf-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--dark); color: #fff; padding: 10px 20px; font-size: 12px; border-left: 3px solid var(--orange); pointer-events: none; opacity: 1; transition: opacity .3s; z-index: 100; white-space: nowrap; }
+    .pdf-toast { position: fixed; bottom: 52px; left: 50%; transform: translateX(-50%); background: var(--dark); color: #fff; padding: 10px 20px; font-size: 12px; border-left: 3px solid var(--orange); pointer-events: none; opacity: 1; transition: opacity .3s; z-index: 100; white-space: nowrap; }
     .pdf-toast.fade { opacity: 0; }
 
     /* ── Screen 1 — Login ────────────────────────────────── */
@@ -374,6 +381,13 @@
 <!-- Toast PDF-Demo -->
 <div class="pdf-toast hide" id="pdfToast"></div>
 
+<!-- Prototyp-Hinweis -->
+<div class="proto-bar">
+  <strong>Prototyp zur Anforderungsvalidierung</strong> — HTW Dresden, Projektseminar Agentic Engineering WS&nbsp;2026/27.
+  Beispieldaten, simulierter Login, kein Backend. Eingaben werden nicht gespeichert.
+  <a href="https://github.com/etienne-mathis/seminar-enrollment-prototype">Quellcode</a>
+</div>
+
 
 <!-- ═══════════════ OVERLAY — BESTÄTIGUNG ═══════════════ -->
 <div id="overlay">
@@ -531,9 +545,12 @@ function updateRow(m) {
     const btn = document.getElementById(`rbtn-${m.id}-${r}`);
     if (!btn) return;
     const isActive     = rank === r;
-    const takenByOther = byRank(r) !== null && !isActive;
-    btn.className     = 'rank-btn' + (isActive ? ' active-r' + r : '');
-    btn.style.display = takenByOther ? 'none' : '';
+    const otherId      = byRank(r);
+    const takenByOther = otherId !== null && !isActive;
+    btn.className = 'rank-btn' + (isActive ? ' active-r' + r : '') + (takenByOther ? ' taken' : '');
+    btn.title = takenByOther
+      ? `${RANK_LABEL[r]} liegt aktuell auf „${MODULE.find(x => x.id === otherId).name}" — klicken verschiebt ihn hierher`
+      : RANK_LABEL[r];
   });
 }
 
