@@ -1,0 +1,47 @@
+name: Deploy prototype to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Laufende Deployments nicht abbrechen, aber nur eines gleichzeitig zulassen.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Proof-Gate: ein Prototyp, der die Akzeptanzkriterien reisst, wird
+      # nicht veroeffentlicht.
+      - name: Akzeptanzkriterien pruefen
+        run: node tests/ak-harness.mjs
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      # Nur der Prototyp wird veroeffentlicht, nicht das gesamte Repository.
+      - name: Upload prototype directory
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: prototyp
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
