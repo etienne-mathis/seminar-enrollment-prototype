@@ -26,6 +26,8 @@
       --r3:           #8C3610;
       --success:      #217A3C;
       --success-bg:   #F0F7F2;
+      --error:        #C00000;
+      --error-bg:     #FFF5F4;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -145,6 +147,17 @@
       .data-table th:nth-child(8), .data-table td:nth-child(8) { display: none; }
     }
 
+    /* ── Manuelle Zuordnung ────────────────────────────── */
+    .assign-select { font-family: inherit; font-size: 12px; padding: 5px 7px; border: 1.5px solid var(--border); background: var(--surface); color: var(--text); border-radius: 0; max-width: 170px; cursor: pointer; }
+    .assign-select:focus { outline: none; border-color: var(--orange); }
+    .assign-select.changed { border-color: var(--orange); background: #FFFBF9; font-weight: 600; }
+    .assign-select.full { border-color: var(--error); background: var(--error-bg); }
+    .origin-chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; background: #EEF4FB; color: #1B5E9E; margin-left: 6px; }
+    .cap-warn { font-size: 11px; color: var(--error); margin-top: 4px; }
+    .btn-ghost { background: transparent; color: var(--soft); border-color: var(--border); }
+    .btn-ghost:hover { border-color: var(--soft); color: var(--text); }
+    .publish-note { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
     /* Prototyp-Hinweis */
     .proto-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: var(--dark); color: rgba(255,255,255,.72); border-top: 2px solid var(--orange); padding: 7px 16px; font-size: 11px; line-height: 1.4; text-align: center; }
     .proto-bar strong { color: #fff; font-weight: 600; }
@@ -188,13 +201,13 @@
   <!-- Stats -->
   <div class="stats-bar">
     <div class="stats-item">
-      <div class="stats-num">22</div>
+      <div class="stats-num" id="statBewerbungen">22</div>
       <div class="stats-desc">Bewerbungen gesamt</div>
       <div class="stats-sub">von 24 Studierenden im Kurs</div>
     </div>
     <div class="stats-item">
-      <div class="stats-num hl">82&thinsp;%</div>
-      <div class="stats-desc">KI-Vorschlag: Erstwunsch</div>
+      <div class="stats-num hl" id="statErstwunsch">82&thinsp;%</div>
+      <div class="stats-desc">Erstwunsch erfüllt</div>
       <div class="rank-dist">
         <div class="rank-dist-item"><div class="rank-dist-dot r1"></div>18&thinsp;×&thinsp;Rang&thinsp;1</div>
         <div class="rank-dist-item"><div class="rank-dist-dot r2"></div>3&thinsp;×&thinsp;Rang&thinsp;2</div>
@@ -221,9 +234,15 @@
   <!-- Studiendekan Aktionsleiste -->
   <div class="studiendekan-bar">
     <div class="studiendekan-info">
-      <strong>22 KI-Vorschläge liegen vor.</strong> Bitte Bewerbungen und Motivationsschreiben prüfen und anschließend Zuteilung verbindlich bestätigen. Die finale Entscheidung liegt beim Studiendekan.
+      <strong id="dekanHeadline">KI-Vorschläge liegen vor.</strong>
+      Bewerbungen und Motivationsschreiben prüfen, Zuordnungen bei Bedarf in der Spalte
+      <em>Zuordnung</em> anpassen und anschließend veröffentlichen. Die finale Entscheidung liegt beim Studiendekan.
+      <div class="publish-note" id="publishNote"></div>
     </div>
-    <button class="btn btn-primary" onclick="handleZuteilungBestaetigen()">Zuteilung bestätigen</button>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-ghost" id="resetBtn" onclick="handleReset()">Demo zurücksetzen</button>
+      <button class="btn btn-primary" id="publishBtn" onclick="handleVeroeffentlichen()">Ergebnisse veröffentlichen</button>
+    </div>
   </div>
 
   <!-- Seminarauslastung -->
@@ -263,9 +282,9 @@
           <th>Erstwunsch</th>
           <th>Zweitwunsch</th>
           <th>Drittwunsch</th>
-          <th style="width:160px">KI-Vorschlag</th>
+          <th style="width:180px">Zuordnung (änderbar)</th>
           <th style="width:72px;text-align:center">Rang</th>
-          <th style="width:120px;text-align:center">Ergebnis</th>
+          <th style="width:120px;text-align:center">Wunsch erfüllt</th>
           <th style="width:72px;text-align:center">Motiv</th>
         </tr>
       </thead>
@@ -274,7 +293,7 @@
         <tr>
           <td colspan="8" style="padding:0">
             <div class="table-footer">
-              <span>22 Bewerbungen · sortiert nach Einschreibezeitpunkt</span>
+              <span id="tableFooterInfo">22 Bewerbungen · sortiert nach Einschreibezeitpunkt</span>
               <span>KI-Auswertung: 01.12.2026, 00:15 Uhr</span>
             </div>
           </td>
@@ -334,37 +353,88 @@ const STUDENTS = [
   { sNr: 'S75599', w: ['web',   'sec',   'ml-ki'], zugewiesen: 'ml-ki', rang: 3, motiv: '' },
 ];
 
-function buildModuleStats() {
-  const stats = {};
-  Object.keys(MODULE_SHORT).forEach(id => { stats[id] = { eingeschr: 0, kapazitaet: 10, rang1: 0, rang2: 0, rang3: 0 }; });
-  STUDENTS.forEach(s => {
-    const st = stats[s.zugewiesen];
-    if (!st) return;
-    st.eingeschr++;
-    if      (s.rang === 1) st.rang1++;
-    else if (s.rang === 2) st.rang2++;
-    else if (s.rang === 3) st.rang3++;
-  });
-  return stats;
+const KAPAZITAET = 10;
+const RANK_LABEL = { 1: 'Erstwunsch', 2: 'Zweitwunsch', 3: 'Drittwunsch' };
+
+// ── Ablage (Fake-Backend, geteilt mit index.html) ──────────────────────────
+const STORE_KEY = 'ps-enrollment-demo-v1';
+
+function store() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    const s = raw ? JSON.parse(raw) : {};
+    return { bewerbung: s.bewerbung || null, zuordnungen: s.zuordnungen || {}, veroeffentlicht: !!s.veroeffentlicht };
+  } catch {
+    return { bewerbung: null, zuordnungen: {}, veroeffentlicht: false };
+  }
 }
 
+function saveStore(s) {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch { /* Privatmodus */ }
+}
+
+// ── Bewerbungsliste ────────────────────────────────────────────────────────
+// Beispieldaten plus die im Studierenden-Portal eingereichte Bewerbung.
+// Der in STUDENTS hinterlegte Wert ist der KI-Vorschlag; eine manuelle
+// Zuordnung aus der Ablage überschreibt ihn (US-009 AK6).
+function roster() {
+  const s = store();
+  const list = STUDENTS.map(x => ({ sNr: x.sNr, w: x.w, motiv: x.motiv, vorschlag: x.zugewiesen, quelle: 'demo' }));
+
+  if (s.bewerbung) {
+    const b = s.bewerbung;
+    const w = [b.wuensche[1], b.wuensche[2], b.wuensche[3]];
+    const eigene = { sNr: b.sNr, w, motiv: b.motivation || '', vorschlag: w[0], quelle: 'neu' };
+    const idx = list.findIndex(x => x.sNr === b.sNr);
+    if (idx >= 0) list[idx] = eigene; else list.unshift(eigene);
+  }
+
+  return list.map(x => {
+    const zugewiesen = Object.prototype.hasOwnProperty.call(s.zuordnungen, x.sNr)
+      ? s.zuordnungen[x.sNr]
+      : x.vorschlag;
+    const rangIdx = x.w.indexOf(zugewiesen);
+    return { ...x, zugewiesen, rang: rangIdx >= 0 ? rangIdx + 1 : null };
+  });
+}
+
+function belegung(list) {
+  const b = {};
+  Object.keys(MODULE_SHORT).forEach(id => { b[id] = 0; });
+  list.forEach(s => { if (s.zugewiesen && b[s.zugewiesen] !== undefined) b[s.zugewiesen]++; });
+  return b;
+}
+
+// ── Seminarauslastung ──────────────────────────────────────────────────────
 function renderModuleTable() {
-  const stats = buildModuleStats();
+  const list = roster();
+  const bel  = belegung(list);
+  const stats = {};
+  Object.keys(MODULE_SHORT).forEach(id => {
+    stats[id] = { eingeschr: bel[id], kapazitaet: KAPAZITAET, rang1: 0, rang2: 0, rang3: 0 };
+  });
+  list.forEach(s => {
+    const st = stats[s.zugewiesen];
+    if (!st || !s.rang) return;
+    if (s.rang === 1) st.rang1++; else if (s.rang === 2) st.rang2++; else if (s.rang === 3) st.rang3++;
+  });
+
   const order = Object.keys(MODULE_SHORT).sort((a, b) => stats[b].eingeschr - stats[a].eingeschr);
   document.getElementById('modulTableBody').innerHTML = order.map(id => {
-    const s   = stats[id];
+    const s = stats[id];
     const pct = Math.round(s.eingeschr / s.kapazitaet * 100);
+    const voll = s.eingeschr >= s.kapazitaet;
     return `
       <tr>
         <td>
           <div class="seminar-name">${MODULE_SHORT[id]}</div>
           <div class="seminar-full">${MODULE_FULL[id]}</div>
         </td>
-        <td style="font-family:'IBM Plex Mono',monospace;font-weight:600;">${s.eingeschr}</td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-weight:600;${voll ? 'color:var(--error);' : ''}">${s.eingeschr}</td>
         <td style="font-family:'IBM Plex Mono',monospace;color:var(--muted);">${s.kapazitaet}</td>
         <td>
           <div class="auslastung-wrap">
-            <div class="auslastung-bar"><div class="auslastung-fill" style="width:${pct}%"></div></div>
+            <div class="auslastung-bar"><div class="auslastung-fill" style="width:${Math.min(pct, 100)}%${voll ? ';background:var(--error)' : ''}"></div></div>
             <div class="auslastung-pct">${pct}&thinsp;%</div>
           </div>
         </td>
@@ -380,22 +450,42 @@ function renderModuleTable() {
   }).join('');
 }
 
+// ── Bewerbungen ────────────────────────────────────────────────────────────
 function renderStudentTable() {
-  document.getElementById('studentTableBody').innerHTML = STUDENTS.map((s, i) => {
-    const ok       = s.rang === 1;
-    const hasMotiv = s.motiv && s.motiv.trim().length > 0;
+  const list = roster();
+  const s    = store();
+  const gesperrt = s.veroeffentlicht;
+
+  document.getElementById('studentTableBody').innerHTML = list.map((st, i) => {
+    const hasMotiv  = st.motiv && st.motiv.trim().length > 0;
+    const geaendert = st.zugewiesen !== st.vorschlag;
+    const options = Object.keys(MODULE_SHORT).map(id =>
+      `<option value="${id}"${id === st.zugewiesen ? ' selected' : ''}>${MODULE_SHORT[id]}</option>`).join('');
+    const keine = `<option value=""${!st.zugewiesen ? ' selected' : ''}>— nicht zugeteilt —</option>`;
+
     return `
       <tr>
-        <td style="font-family:'IBM Plex Mono',monospace;font-size:12px;">${s.sNr}</td>
-        <td style="font-size:12px;">${MODULE_SHORT[s.w[0]] || s.w[0]}</td>
-        <td style="font-size:12px;color:var(--soft);">${MODULE_SHORT[s.w[1]] || s.w[1]}</td>
-        <td style="font-size:12px;color:var(--muted);">${MODULE_SHORT[s.w[2]] || s.w[2]}</td>
-        <td style="font-size:12px;font-weight:600;">${MODULE_SHORT[s.zugewiesen]}</td>
-        <td style="text-align:center;"><div style="display:flex;justify-content:center;"><div class="rank-badge r${s.rang}">${s.rang}</div></div></td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:12px;">
+          ${st.sNr}${st.quelle === 'neu' ? '<span class="origin-chip">neu</span>' : ''}
+        </td>
+        <td style="font-size:12px;">${MODULE_SHORT[st.w[0]] || '—'}</td>
+        <td style="font-size:12px;color:var(--soft);">${MODULE_SHORT[st.w[1]] || '—'}</td>
+        <td style="font-size:12px;color:var(--muted);">${MODULE_SHORT[st.w[2]] || '—'}</td>
+        <td>
+          <select class="assign-select${geaendert ? ' changed' : ''}" ${gesperrt ? 'disabled' : ''}
+                  onchange="changeZuordnung('${st.sNr}', this.value, this)">
+            ${keine}${options}
+          </select>
+          ${geaendert ? `<div style="font-size:10px;color:var(--orange);margin-top:3px">manuell geändert · Vorschlag: ${MODULE_SHORT[st.vorschlag] || '—'}</div>` : ''}
+        </td>
         <td style="text-align:center;">
-          <div class="status-chip ${ok ? 'ok' : 'warn'}">
+          ${st.rang ? `<div style="display:flex;justify-content:center;"><div class="rank-badge r${st.rang}">${st.rang}</div></div>`
+                    : `<span style="font-size:11px;color:var(--muted)">—</span>`}
+        </td>
+        <td style="text-align:center;">
+          <div class="status-chip ${st.rang === 1 ? 'ok' : 'warn'}">
             <div class="status-chip-dot"></div>
-            ${s.rang === 1 ? 'Erstwunsch' : s.rang === 2 ? 'Zweitwunsch' : 'Drittwunsch'}
+            ${st.rang ? RANK_LABEL[st.rang] : 'offen'}
           </div>
         </td>
         <td style="text-align:center;">
@@ -408,9 +498,52 @@ function renderStudentTable() {
         </td>
       </tr>
       <tr class="motiv-expand-row" id="motiv-row-${i}">
-        <td class="motiv-expand-cell" colspan="8">"${hasMotiv ? s.motiv : 'Kein Motivationsschreiben eingereicht.'}"</td>
+        <td class="motiv-expand-cell" colspan="8">"${hasMotiv ? st.motiv : 'Kein Motivationsschreiben eingereicht.'}"</td>
       </tr>`;
   }).join('');
+
+  document.getElementById('tableFooterInfo').textContent =
+    `${list.length} Bewerbungen · sortiert nach Einschreibezeitpunkt`;
+}
+
+// ── Manuelle Zuordnung (US-009 AK6/AK7) ────────────────────────────────────
+function changeZuordnung(sNr, ziel, el) {
+  const s = store();
+
+  // AK7: Die Zuordnung darf die Kapazität nicht überschreiten.
+  if (ziel) {
+    const kuenftig = roster().map(x => (x.sNr === sNr ? { ...x, zugewiesen: ziel } : x));
+    if (belegung(kuenftig)[ziel] > KAPAZITAET) {
+      alert(`"${MODULE_SHORT[ziel]}" ist mit ${KAPAZITAET} Plätzen bereits voll belegt.\n\nBitte zuerst eine andere Zuordnung auflösen.`);
+      renderAll();
+      return;
+    }
+  }
+
+  s.zuordnungen[sNr] = ziel || null;
+  saveStore(s);
+  renderAll();
+}
+
+function handleVeroeffentlichen() {
+  const s = store();
+  if (s.veroeffentlicht) {
+    if (!confirm('Veröffentlichung zurücknehmen? Studierende sehen ihr Ergebnis dann nicht mehr.')) return;
+    s.veroeffentlicht = false;
+  } else {
+    const offen = roster().filter(x => !x.zugewiesen).length;
+    const warn = offen ? `\n\nAchtung: ${offen} Bewerbung(en) ohne Zuordnung.` : '';
+    if (!confirm('Ergebnisse verbindlich veröffentlichen?\n\nStudierende sehen danach ihre Zuteilung im Portal.' + warn)) return;
+    s.veroeffentlicht = true;
+  }
+  saveStore(s);
+  renderAll();
+}
+
+function handleReset() {
+  if (!confirm('Demo-Daten zurücksetzen?\n\nEingereichte Bewerbung, manuelle Zuordnungen und die Veröffentlichung werden gelöscht.')) return;
+  try { localStorage.removeItem(STORE_KEY); } catch { /* egal */ }
+  renderAll();
 }
 
 function toggleMotiv(i) {
@@ -421,14 +554,43 @@ function toggleMotiv(i) {
   btn.classList.toggle('open', !isOpen);
 }
 
-function handleZuteilungBestaetigen() {
-  if (confirm('Zuteilung verbindlich bestätigen und an Studierende kommunizieren?')) {
-    alert('Demo: Zuteilung bestätigt. In der Produktion würden hier Benachrichtigungen an alle Studierenden versendet.');
-  }
+// ── Kopfzeile und Kennzahlen ───────────────────────────────────────────────
+function renderHeader() {
+  const s    = store();
+  const list = roster();
+  const manuell = list.filter(x => x.zugewiesen !== x.vorschlag).length;
+  const offen   = list.filter(x => !x.zugewiesen).length;
+
+  document.getElementById('dekanHeadline').textContent =
+    s.veroeffentlicht ? 'Ergebnisse sind veröffentlicht.' : `${list.length} KI-Vorschläge liegen vor.`;
+
+  const teile = [];
+  if (manuell) teile.push(`${manuell} Zuordnung(en) manuell geändert`);
+  if (offen)   teile.push(`${offen} ohne Zuordnung`);
+  teile.push(s.veroeffentlicht
+    ? 'Studierende sehen ihre Zuteilung im Portal.'
+    : 'Noch nicht veröffentlicht — Studierende sehen das Ergebnis nicht.');
+  document.getElementById('publishNote').textContent = teile.join(' · ');
+
+  const btn = document.getElementById('publishBtn');
+  btn.textContent = s.veroeffentlicht ? 'Veröffentlichung zurücknehmen' : 'Ergebnisse veröffentlichen';
+  btn.className = 'btn ' + (s.veroeffentlicht ? 'btn-ghost' : 'btn-primary');
+
+  const erfuellt = list.filter(x => x.rang === 1).length;
+  const quote = list.length ? Math.round(erfuellt / list.length * 100) : 0;
+  const q = document.getElementById('statErstwunsch');
+  if (q) q.textContent = quote + ' %';
+  const n = document.getElementById('statBewerbungen');
+  if (n) n.textContent = list.length;
 }
 
-renderModuleTable();
-renderStudentTable();
+function renderAll() {
+  renderHeader();
+  renderModuleTable();
+  renderStudentTable();
+}
+
+renderAll();
 </script>
 
 <!-- Prototyp-Hinweis -->

@@ -76,6 +76,59 @@
     .pdf-link { cursor: pointer; user-select: none; border: 1px solid var(--border-light); padding: 1px 6px; transition: border-color .12s, color .12s; }
     .pdf-link:hover { border-color: var(--orange); color: var(--orange); }
 
+    /* ── Leerzustand ─────────────────────────────────────── */
+    .empty-state { padding: 40px 24px; text-align: center; }
+    .empty-state-icon { width: 40px; height: 40px; margin: 0 auto 14px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); }
+    .empty-state-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .empty-state-text { font-size: 12px; color: var(--soft); line-height: 1.6; max-width: 420px; margin: 0 auto; }
+
+    /* ── PDF-Vorschau ────────────────────────────────────── */
+    #pdfModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 60; align-items: center; justify-content: center; padding: 20px; }
+    .pdf-box { background: var(--surface); max-width: 560px; width: 100%; max-height: 82vh; display: flex; flex-direction: column; border-top: 4px solid var(--orange); }
+    .pdf-head { padding: 18px 22px 14px; border-bottom: 1px solid var(--border-light); }
+    .pdf-kicker { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 6px; }
+    .pdf-title { font-size: 16px; font-weight: 700; letter-spacing: -.015em; line-height: 1.3; }
+    .pdf-meta { font-size: 12px; color: var(--soft); margin-top: 5px; }
+    .pdf-body { padding: 18px 22px; overflow-y: auto; font-size: 13px; line-height: 1.75; color: var(--text); }
+    .pdf-body h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 16px 0 6px; }
+    .pdf-body h4:first-child { margin-top: 0; }
+    .pdf-foot { padding: 14px 22px; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .pdf-foot .btn { padding: 9px 18px; }
+    .btn-ghost { background: transparent; color: var(--soft); border-color: var(--border); }
+    .btn-ghost:hover { border-color: var(--soft); color: var(--text); }
+    .pdf-missing { display: flex; align-items: flex-start; gap: 10px; padding: 14px 16px; background: var(--error-bg); border-left: 3px solid var(--error); font-size: 13px; color: var(--error); line-height: 1.6; }
+
+    /* ── Screen 3 — Bewerbungsstatus ─────────────────────── */
+    #screen-status { display: none; min-height: 100vh; flex-direction: column; }
+    .status-main { flex: 1; max-width: 760px; margin: 0 auto; width: 100%; padding: 32px 24px 96px; }
+    .status-card { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--dark); margin-bottom: 20px; }
+    .status-card-head { padding: 20px 24px 18px; border-bottom: 1px solid var(--border-light); }
+    .status-badge { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+    .status-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .status-badge.eingereicht  { background: #EEF4FB; color: #1B5E9E; }
+    .status-badge.bearbeitung  { background: #FEF0E8; color: var(--orange); }
+    .status-badge.zugeteilt    { background: var(--success-bg); color: var(--success); }
+    .status-headline { font-size: 19px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 6px; }
+    .status-sub { font-size: 13px; color: var(--soft); line-height: 1.6; }
+    .status-ts { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 10px; }
+
+    .result-box { margin: 0 24px 20px; padding: 16px 18px; background: var(--success-bg); border-left: 3px solid var(--success); }
+    .result-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--success); margin-bottom: 5px; }
+    .result-value { font-size: 15px; font-weight: 700; letter-spacing: -.015em; }
+    .result-note  { font-size: 12px; color: var(--soft); margin-top: 5px; }
+
+    .status-list { padding: 18px 24px; display: flex; flex-direction: column; gap: 15px; }
+    .status-row { display: flex; align-items: flex-start; gap: 13px; }
+    .status-row-name { font-size: 14px; font-weight: 600; line-height: 1.35; }
+    .status-row-label { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-top: 2px; }
+    .status-motiv { padding: 0 24px 20px; }
+    .status-motiv-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 7px; }
+    .status-motiv-text { font-size: 13px; line-height: 1.75; color: var(--soft); font-style: italic; padding: 13px 16px; background: var(--bg); border-left: 3px solid var(--border); }
+    .status-actions { padding: 16px 24px; border-top: 1px solid var(--border-light); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .status-actions-note { font-size: 11px; color: var(--muted); flex: 1; min-width: 180px; line-height: 1.5; }
+
+    @media (max-width: 540px) { .status-main { padding: 22px 16px 96px; } }
+
     /* Prototyp-Hinweis */
     .proto-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: var(--dark); color: rgba(255,255,255,.72); border-top: 2px solid var(--orange); padding: 7px 16px; font-size: 11px; line-height: 1.4; text-align: center; }
     .proto-bar strong { color: #fff; font-weight: 600; }
@@ -378,6 +431,85 @@
 </div>
 
 
+<!-- ═══════════════ SCREEN 3 — BEWERBUNGSSTATUS ═══════════════ -->
+<div id="screen-status">
+
+  <header class="enroll-header">
+    <div class="enroll-header-inner">
+      <div class="header-brand">
+        <div class="header-logo-box"><span>HTW</span></div>
+        <div class="header-sep"></div>
+        <div class="header-ctx">
+          <div class="header-title">Meine Bewerbung</div>
+          <div class="header-meta">WS&nbsp;2026/27 · HTW Dresden</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-user">
+          <div class="header-user-name" id="userDisplayStatus">—</div>
+          <div class="header-user-role">Wirtschaftsinformatik</div>
+        </div>
+        <button class="btn btn-outline-light" onclick="handleLogout()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Abmelden
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="frist-bar">
+    <div class="frist-bar-inner">
+      <div class="frist-dot"></div>
+      <span id="statusFristText">Anmeldefrist aktiv: <strong>30. November 2026, 23:59 Uhr</strong>&nbsp;·&nbsp; Änderungen bis Fristende möglich</span>
+    </div>
+  </div>
+
+  <div class="status-main">
+    <div class="status-card">
+      <div class="status-card-head">
+        <div class="status-badge" id="statusBadge"><div class="status-badge-dot"></div><span id="statusBadgeText">—</span></div>
+        <div class="status-headline" id="statusHeadline">—</div>
+        <div class="status-sub" id="statusSub">—</div>
+        <div class="status-ts" id="statusTs"></div>
+      </div>
+
+      <div id="statusResult" class="hide"></div>
+
+      <div class="status-list" id="statusList"></div>
+
+      <div class="status-motiv" id="statusMotivWrap">
+        <div class="status-motiv-label">Motivationsschreiben zum Erstwunsch</div>
+        <div class="status-motiv-text" id="statusMotivText"></div>
+      </div>
+
+      <div class="status-actions">
+        <div class="status-actions-note" id="statusActionNote"></div>
+        <button class="btn btn-primary" id="statusEditBtn" onclick="editBewerbung()">Bewerbung bearbeiten</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-link-bar"><a href="admin.html">Admin-Ansicht (Prototype)</a></div>
+</div>
+
+
+<!-- ═══════════════ PDF-VORSCHAU ═══════════════ -->
+<div id="pdfModal">
+  <div class="pdf-box">
+    <div class="pdf-head">
+      <div class="pdf-kicker">Projektseminarbeschreibung · PDF-Vorschau</div>
+      <div class="pdf-title" id="pdfTitle">—</div>
+      <div class="pdf-meta" id="pdfMeta">—</div>
+    </div>
+    <div class="pdf-body" id="pdfBody"></div>
+    <div class="pdf-foot">
+      <button class="btn btn-ghost" onclick="closePdf()">Schließen</button>
+      <button class="btn btn-primary" id="pdfDownloadBtn" onclick="downloadPdfDemo()">Herunterladen</button>
+    </div>
+  </div>
+</div>
+
+
 <!-- Toast PDF-Demo -->
 <div class="pdf-toast hide" id="pdfToast"></div>
 
@@ -410,15 +542,16 @@
 
 <script>
 // ── Seminardaten ────────────────────────────────────────────────────────────
+// pdf: false bildet den Fall "keine Beschreibung hinterlegt" ab (US-003 AK5).
 const MODULE = [
-  { id: 'ml-ki',  nr: 'PS-01', name: 'Machine Learning in der Praxis',    prof: 'Prof. Dr. Haubner', cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Grundlagen überwachten und unüberwachten Lernens, neuronale Netze, Python/scikit-learn. Schwerpunkt auf praktischer Umsetzung realer Datensätze.' },
-  { id: 'web',    nr: 'PS-02', name: 'Cloud-native Softwareentwicklung',   prof: 'Prof. Dr. Koch',    cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Moderne Frontend-Frameworks, REST- und GraphQL-APIs, Cloud-Deployment auf AWS/Azure, CI/CD-Pipelines und Container-Orchestrierung.' },
-  { id: 'db',     nr: 'PS-03', name: 'Datenbanken und Big Data',           prof: 'Prof. Dr. Braun',   cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Query-Optimierung, verteilte Datenbanken, NoSQL-Systeme (MongoDB, Redis), Datenbankdesign für Hochlastsysteme.' },
-  { id: 'sec',    nr: 'PS-04', name: 'IT-Sicherheit und Compliance',       prof: 'Prof. Dr. Fischer', cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Angriffsvektoren und Gegenmaßnahmen, DSGVO-konforme Systementwicklung, Penetrationstests, Security by Design.' },
-  { id: 'agile',  nr: 'PS-05', name: 'Agile Softwareentwicklung',          prof: 'Prof. Dr. Schmidt', cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Scrum und Kanban in der Praxis, teambasiertes Semesterprojekt mit echtem Product Backlog, Retrospektiven und Demos.' },
-  { id: 'entre',  nr: 'PS-06', name: 'Digital Entrepreneurship',           prof: 'Prof. Dr. Weber',   cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Geschäftsmodelle für digitale Produkte, Lean Startup, MVP-Entwicklung, Pitching und Finanzierungsgrundlagen.' },
-  { id: 'qa',     nr: 'PS-07', name: 'Software Quality Engineering',       prof: 'Prof. Dr. Meier',   cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Teststrategie, TDD/BDD, automatisierte Tests, Code-Reviews, statische Analyse und kontinuierliche Qualitätssicherung.' },
-  { id: 'pm',     nr: 'PS-08', name: 'IT-Projektmanagement in der Praxis', prof: 'Prof. Dr. Müller',  cp: '5 CP', sem: '4. / 6. Sem.', desc: 'Klassisches und agiles Projektmanagement, Risikoanalyse, Ressourcenplanung, Zertifizierungsgrundlagen (IPMA/PMP).' },
+  { id: 'ml-ki',  nr: 'PS-01', name: 'Machine Learning in der Praxis',    prof: 'Prof. Dr. Haubner', cp: '5 CP', sem: '4. / 6. Sem.', pdf: true,  desc: 'Grundlagen überwachten und unüberwachten Lernens, neuronale Netze, Python/scikit-learn. Schwerpunkt auf praktischer Umsetzung realer Datensätze.', vor: 'Grundkenntnisse Python, Mathematik 1 und 2', pruef: 'Projektarbeit mit Abschlusspräsentation' },
+  { id: 'web',    nr: 'PS-02', name: 'Cloud-native Softwareentwicklung',   prof: 'Prof. Dr. Koch',    cp: '5 CP', sem: '4. / 6. Sem.', pdf: true,  desc: 'Moderne Frontend-Frameworks, REST- und GraphQL-APIs, Cloud-Deployment auf AWS/Azure, CI/CD-Pipelines und Container-Orchestrierung.', vor: 'Programmierung 1 und 2, Grundlagen Netzwerke', pruef: 'Projektarbeit im Team, Code-Review als Teilleistung' },
+  { id: 'db',     nr: 'PS-03', name: 'Datenbanken und Big Data',           prof: 'Prof. Dr. Braun',   cp: '5 CP', sem: '4. / 6. Sem.', pdf: true,  desc: 'Query-Optimierung, verteilte Datenbanken, NoSQL-Systeme (MongoDB, Redis), Datenbankdesign für Hochlastsysteme.', vor: 'Datenbanken 1', pruef: 'Projektarbeit mit schriftlicher Ausarbeitung' },
+  { id: 'sec',    nr: 'PS-04', name: 'IT-Sicherheit und Compliance',       prof: 'Prof. Dr. Fischer', cp: '5 CP', sem: '4. / 6. Sem.', pdf: true,  desc: 'Angriffsvektoren und Gegenmaßnahmen, DSGVO-konforme Systementwicklung, Penetrationstests, Security by Design.', vor: 'Grundlagen Netzwerke und Betriebssysteme', pruef: 'Praktischer Teil plus mündliche Prüfung' },
+  { id: 'agile',  nr: 'PS-05', name: 'Agile Softwareentwicklung',          prof: 'Prof. Dr. Schmidt', cp: '5 CP', sem: '4. / 6. Sem.', pdf: true,  desc: 'Scrum und Kanban in der Praxis, teambasiertes Semesterprojekt mit echtem Product Backlog, Retrospektiven und Demos.', vor: 'Software Engineering 1', pruef: 'Teamprojekt, bewertet über Sprint-Reviews' },
+  { id: 'entre',  nr: 'PS-06', name: 'Digital Entrepreneurship',           prof: 'Prof. Dr. Weber',   cp: '5 CP', sem: '4. / 6. Sem.', pdf: true,  desc: 'Geschäftsmodelle für digitale Produkte, Lean Startup, MVP-Entwicklung, Pitching und Finanzierungsgrundlagen.', vor: 'Keine besonderen Voraussetzungen', pruef: 'Businessplan und Pitch vor einer Jury' },
+  { id: 'qa',     nr: 'PS-07', name: 'Software Quality Engineering',       prof: 'Prof. Dr. Meier',   cp: '5 CP', sem: '4. / 6. Sem.', pdf: true,  desc: 'Teststrategie, TDD/BDD, automatisierte Tests, Code-Reviews, statische Analyse und kontinuierliche Qualitätssicherung.', vor: 'Programmierung 2, Software Engineering 1', pruef: 'Projektarbeit mit Testsuite als Abgabe' },
+  { id: 'pm',     nr: 'PS-08', name: 'IT-Projektmanagement in der Praxis', prof: 'Prof. Dr. Müller',  cp: '5 CP', sem: '4. / 6. Sem.', pdf: false, desc: 'Klassisches und agiles Projektmanagement, Risikoanalyse, Ressourcenplanung, Zertifizierungsgrundlagen (IPMA/PMP).', vor: 'Keine besonderen Voraussetzungen', pruef: 'Schriftliche Ausarbeitung' },
 ];
 
 const RANK_LABEL = { 1: 'Erstwunsch', 2: 'Zweitwunsch', 3: 'Drittwunsch' };
@@ -428,6 +561,51 @@ const state = {};
 MODULE.forEach(m => { state[m.id] = null; });
 let listBuilt   = false;
 let summaryOpen = true;
+let currentUser = null;
+
+// Demo-Schalter: ?leer=1 simuliert "aktuell werden keine Projektseminare angeboten"
+// und macht damit US-002 AK6 im Gespräch vorführbar.
+const KEINE_SEMINARE = new URLSearchParams(location.search).has('leer');
+function angeboteneSeminare() { return KEINE_SEMINARE ? [] : MODULE; }
+
+// ── Ablage (Fake-Backend) ──────────────────────────────────────────────────
+// Steht stellvertretend für die Persistenz aus US-006. Wird von der
+// Verwaltungsansicht mitgelesen, damit die Kette Bewerbung -> Zuordnung ->
+// Veröffentlichung -> Statusanzeige vollständig durchklickbar ist.
+const STORE_KEY = 'ps-enrollment-demo-v1';
+
+function store() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    const s = raw ? JSON.parse(raw) : {};
+    return { bewerbung: s.bewerbung || null, zuordnungen: s.zuordnungen || {}, veroeffentlicht: !!s.veroeffentlicht };
+  } catch {
+    return { bewerbung: null, zuordnungen: {}, veroeffentlicht: false };
+  }
+}
+
+function saveStore(s) {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch { /* Privatmodus: Demo läuft ohne Persistenz weiter */ }
+}
+
+// Eingereicht -> In Bearbeitung (Zuordnung liegt vor) -> Zugeteilt (veröffentlicht).
+// Eine nicht veröffentlichte Zuordnung darf der Studierenden-Seite das Ergebnis
+// nicht verraten (US-010 AK7).
+function statusOf(s) {
+  if (!s.bewerbung) return null;
+  const zugeordnet = s.zuordnungen[s.bewerbung.sNr];
+  if (s.veroeffentlicht && zugeordnet) return 'zugeteilt';
+  if (zugeordnet) return 'bearbeitung';
+  return 'eingereicht';
+}
+
+function showScreen(name) {
+  ['login', 'enrollment', 'status'].forEach(n => {
+    const el = document.getElementById('screen-' + n);
+    el.style.display = (n === name) ? 'flex' : 'none';
+    if (n === name && n !== 'login') el.style.flexDirection = 'column';
+  });
+}
 
 // ── Login ──────────────────────────────────────────────────────────────────
 function handleLogin(e) {
@@ -441,16 +619,28 @@ function handleLogin(e) {
   }
   errEl.classList.add('hide'); input.classList.remove('has-error');
   const normalised = /^\d/.test(sNr) ? 's' + sNr.toLowerCase() : sNr.toLowerCase();
-  document.getElementById('userDisplay').textContent = normalised.toUpperCase();
-  document.getElementById('screen-login').style.display      = 'none';
-  document.getElementById('screen-enrollment').style.display = 'flex';
-  document.getElementById('screen-enrollment').style.flexDirection = 'column';
+  currentUser = normalised.toUpperCase();
+  document.getElementById('userDisplay').textContent       = currentUser;
+  document.getElementById('userDisplayStatus').textContent = currentUser;
   if (!listBuilt) { buildList(); listBuilt = true; }
+  routeAfterLogin();
+}
+
+// Liegt für diese s-Nummer bereits eine Bewerbung vor, führt der Login direkt
+// in die Statusansicht (US-007 AK1). Sonst in das Einschreibeformular.
+function routeAfterLogin() {
+  const s = store();
+  if (s.bewerbung && s.bewerbung.sNr === currentUser) {
+    renderStatus();
+    showScreen('status');
+  } else {
+    showScreen('enrollment');
+  }
 }
 
 function handleLogout() {
-  document.getElementById('screen-enrollment').style.display = 'none';
-  document.getElementById('screen-login').style.display      = 'flex';
+  currentUser = null;
+  showScreen('login');
   document.getElementById('sNummer').value  = '';
   document.getElementById('passwort').value = '';
   document.getElementById('loginErr').classList.add('hide');
@@ -468,7 +658,23 @@ function togglePwVis() {
 // ── Seminarliste aufbauen ──────────────────────────────────────────────────
 function buildList() {
   const container = document.getElementById('moduleList');
-  MODULE.forEach(m => {
+  const angeboten = angeboteneSeminare();
+
+  // US-002 AK6 — keine angebotenen Projektseminare
+  if (angeboten.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="empty-state-title">Aktuell werden keine Projektseminare angeboten</div>
+        <div class="empty-state-text">Für das Wintersemester 2026/27 sind noch keine Projektseminare freigegeben. Sobald das Angebot veröffentlicht ist, erscheint es an dieser Stelle.</div>
+      </div>`;
+    document.getElementById('submitBtn').disabled = true;
+    return;
+  }
+
+  angeboten.forEach(m => {
     const row = document.createElement('div');
     row.id        = 'row-' + m.id;
     row.className = 'module-row';
@@ -485,7 +691,7 @@ function buildList() {
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             ${m.sem}
           </span>
-          <span class="module-tag pdf-link" onclick="openPdf('${m.name}')">
+          <span class="module-tag pdf-link" onclick="openPdf('${m.id}')">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             Beschreibung (PDF)
           </span>
@@ -502,18 +708,49 @@ function buildList() {
   });
 }
 
-// ── PDF-Demo Toast ─────────────────────────────────────────────────────────
+// ── Toast ──────────────────────────────────────────────────────────────────
 let toastTimer = null;
-function openPdf(name) {
-  const toast = document.getElementById('pdfToast');
-  toast.textContent = 'Beschreibung wird geöffnet: ' + name + ' (Demo)';
-  toast.classList.remove('hide', 'fade');
+function toast(msg) {
+  const el = document.getElementById('pdfToast');
+  el.textContent = msg;
+  el.classList.remove('hide', 'fade');
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
-    toast.classList.add('fade');
-    setTimeout(() => toast.classList.add('hide'), 300);
+    el.classList.add('fade');
+    setTimeout(() => el.classList.add('hide'), 300);
   }, 2500);
 }
+
+// ── Beschreibung öffnen (US-003) ───────────────────────────────────────────
+function openPdf(moduleId) {
+  const m = MODULE.find(x => x.id === moduleId);
+  if (!m) return;
+  document.getElementById('pdfTitle').textContent = m.name;
+  document.getElementById('pdfMeta').textContent  = `${m.nr} · ${m.prof} · ${m.cp} · ${m.sem}`;
+  const body = document.getElementById('pdfBody');
+  const dlBtn = document.getElementById('pdfDownloadBtn');
+
+  if (m.pdf) {
+    body.innerHTML = `
+      <h4>Inhalt</h4><div>${m.desc}</div>
+      <h4>Voraussetzungen</h4><div>${m.vor}</div>
+      <h4>Prüfungsform</h4><div>${m.pruef}</div>
+      <h4>Umfang</h4><div>${m.cp}, Präsenz und Projektarbeit über das gesamte Semester.</div>`;
+    dlBtn.classList.remove('hide');
+  } else {
+    // US-003 AK5 — keine Beschreibung hinterlegt
+    body.innerHTML = `
+      <div class="pdf-missing">
+        <svg style="width:15px;height:15px;flex-shrink:0;margin-top:2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Für dieses Projektseminar ist derzeit keine Beschreibung hinterlegt. Bitte wende dich bei Fragen zum Inhalt direkt an ${m.prof}.</span>
+      </div>`;
+    dlBtn.classList.add('hide');
+  }
+  document.getElementById('pdfModal').style.display = 'flex';
+}
+
+function closePdf() { document.getElementById('pdfModal').style.display = 'none'; }
+function downloadPdfDemo() { toast('Demo: In der Produktion würde hier die PDF-Datei heruntergeladen.'); }
 
 // ── Zuweisung ──────────────────────────────────────────────────────────────
 function assign(moduleId, rank) {
@@ -620,7 +857,103 @@ function handleSubmit() {
     return;
   }
   valMsg.classList.add('hide');
+
+  // US-006 AK7/AK8 — Bewerbung wird gespeichert und der s-Nummer zugeordnet.
+  const s = store();
+  s.bewerbung = {
+    sNr: currentUser,
+    wuensche: { 1: byRank(1), 2: byRank(2), 3: byRank(3) },
+    motivation: document.getElementById('motivText').value.trim(),
+    eingereichtAm: new Date().toISOString(),
+  };
+  saveStore(s);
+
   showConfirm();
+}
+
+// ── Statusansicht (US-007) ─────────────────────────────────────────────────
+function renderStatus() {
+  const s = store();
+  const b = s.bewerbung;
+  if (!b) { showScreen('enrollment'); return; }
+
+  const st = statusOf(s);
+  const TEXTE = {
+    eingereicht:  { label: 'Eingereicht',    head: 'Deine Bewerbung liegt vor',        sub: 'Die Bewerbung ist eingegangen und wird nach Ablauf der Frist bearbeitet. Bis dahin kannst du deine Wünsche jederzeit ändern.' },
+    bearbeitung:  { label: 'In Bearbeitung', head: 'Deine Bewerbung wird bearbeitet',  sub: 'Die Vergabe läuft. Das Ergebnis wird sichtbar, sobald die Zuteilung veröffentlicht ist.' },
+    zugeteilt:    { label: 'Zugeteilt',      head: 'Deine Zuteilung steht fest',       sub: 'Die Vergabe ist abgeschlossen und veröffentlicht.' },
+  };
+  const t = TEXTE[st];
+
+  const badge = document.getElementById('statusBadge');
+  badge.className = 'status-badge ' + st;
+  document.getElementById('statusBadgeText').textContent = t.label;
+  document.getElementById('statusHeadline').textContent  = t.head;
+  document.getElementById('statusSub').textContent       = t.sub;
+
+  const d = new Date(b.eingereichtAm);
+  document.getElementById('statusTs').textContent =
+    'Eingereicht am ' + d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
+    ' um ' + d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr · ' + b.sNr;
+
+  // Ergebnis nur bei veröffentlichter Vergabe (US-010 AK7)
+  const resBox = document.getElementById('statusResult');
+  if (st === 'zugeteilt') {
+    const zug = MODULE.find(x => x.id === s.zuordnungen[b.sNr]);
+    const rang = [1, 2, 3].find(r => b.wuensche[r] === s.zuordnungen[b.sNr]);
+    resBox.className = 'result-box';
+    resBox.innerHTML = `
+      <div class="result-label">Zugeteiltes Projektseminar</div>
+      <div class="result-value">${zug ? zug.name : 'Keine Zuteilung'}</div>
+      <div class="result-note">${rang ? `Entspricht deinem ${RANK_LABEL[rang]}.` : 'Außerhalb deiner drei Wünsche zugeteilt.'}</div>`;
+  } else {
+    resBox.className = 'hide';
+    resBox.innerHTML = '';
+  }
+
+  document.getElementById('statusList').innerHTML = [1, 2, 3].map(r => {
+    const m = MODULE.find(x => x.id === b.wuensche[r]);
+    return `
+      <div class="status-row">
+        <div class="rank-badge ${RANK_CLASS[r]}">${r}</div>
+        <div>
+          <div class="status-row-name">${m ? m.name : '—'}</div>
+          <div class="status-row-label">${RANK_LABEL[r]}${m ? ' · ' + m.nr : ''}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const motivWrap = document.getElementById('statusMotivWrap');
+  if (b.motivation) {
+    motivWrap.classList.remove('hide');
+    document.getElementById('statusMotivText').textContent = b.motivation;
+  } else {
+    motivWrap.classList.add('hide');
+  }
+
+  // Nach Veröffentlichung ist die Bewerbung nicht mehr änderbar.
+  const editBtn = document.getElementById('statusEditBtn');
+  const note    = document.getElementById('statusActionNote');
+  if (st === 'zugeteilt') {
+    editBtn.classList.add('hide');
+    note.textContent = 'Die Vergabe ist abgeschlossen. Änderungen sind nicht mehr möglich.';
+    document.getElementById('statusFristText').innerHTML = 'Vergabe abgeschlossen und veröffentlicht';
+  } else {
+    editBtn.classList.remove('hide');
+    note.textContent = 'Änderungen sind bis zum Fristende am 30. November 2026, 23:59 Uhr möglich.';
+  }
+}
+
+// Bewerbung zurück ins Formular laden (US-006 "vor der Einreichung überprüfen und anpassen")
+function editBewerbung() {
+  const b = store().bewerbung;
+  if (!b) return;
+  MODULE.forEach(m => { state[m.id] = null; });
+  [1, 2, 3].forEach(r => { if (b.wuensche[r]) state[b.wuensche[r]] = r; });
+  render();
+  document.getElementById('motivText').value = b.motivation || '';
+  onMotivInput();
+  showScreen('enrollment');
 }
 
 function showConfirm() {
@@ -650,6 +983,9 @@ function showConfirm() {
 
 function closeOverlay() {
   document.getElementById('overlay').style.display = 'none';
+  // Nach der Bestätigung landet man in der Statusansicht statt im leeren Formular.
+  renderStatus();
+  showScreen('status');
 }
 </script>
 </body>

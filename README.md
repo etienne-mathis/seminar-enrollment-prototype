@@ -31,25 +31,63 @@ verbunden, damit beide Perspektiven ohne Rollenwechsel durchgeklickt werden kön
 
 `prototyp/index.html` im Browser öffnen. Keine Installation, keine Abhängigkeiten.
 
+## Der vollständige Durchlauf
+
+Der Prototyp bildet die ganze Kette ab. Beide Ansichten teilen sich eine Ablage im
+`localStorage` des Browsers, die stellvertretend für das spätere Backend steht:
+
+1. **Portal** — anmelden (beliebige s-Nummer), drei Projektseminare priorisieren,
+   Motivationsschreiben verfassen, Bewerbung einreichen
+2. **Portal** — die Statusansicht zeigt die Bewerbung mit Status *Eingereicht*;
+   erneutes Anmelden führt direkt dorthin, Änderungen bleiben bis Fristende möglich
+3. **Verwaltung** — die eingereichte Bewerbung erscheint oben in der Liste, markiert
+   als *neu*; Zuordnung in der Spalte *Zuordnung* anpassen (Kapazität wird geprüft)
+4. **Portal** — Status springt auf *In Bearbeitung*, das Ergebnis bleibt verborgen
+5. **Verwaltung** — *Ergebnisse veröffentlichen*
+6. **Portal** — Status springt auf *Zugeteilt* und nennt das zugewiesene Seminar
+   sowie den erfüllten Wunschrang
+
+*Demo zurücksetzen* in der Verwaltung löscht Bewerbung, Zuordnungen und
+Veröffentlichung.
+
+### Demo-Szenarien
+
+| Aufruf | Zeigt |
+|---|---|
+| `index.html?leer=1` | Verhalten, wenn keine Projektseminare angeboten werden (US-002 AK6) |
+| PS-08 → *Beschreibung (PDF)* | Verhalten, wenn keine Beschreibung hinterlegt ist (US-003 AK5) |
+
 ## Abdeckung der User Stories
 
 | Story | Stand | Anmerkung |
 |---|---|---|
 | US-001 Anmeldung und Zugangsberechtigung | angedeutet | Login-Maske mit s-Nummer-Validierung und Fehlermeldung. Keine echte LDAP-Anbindung, keine Rollentrennung. |
-| US-002 Übersicht der Projektseminare | abgedeckt | Acht Seminare mit Nummer, Titel, Professor, Semester, Beschreibung. Kein Leerzustand. |
-| US-003 PDF-Beschreibungen | angedeutet | Aufruf vorhanden, öffnet eine Platzhaltermeldung statt einer Datei. |
+| US-002 Übersicht der Projektseminare | abgedeckt | Acht Seminare mit Nummer, Titel, Professor, Semester, Beschreibung, plus Leerzustand. |
+| US-003 PDF-Beschreibungen | abgedeckt bis auf echte Dateien | Vorschau mit Inhalt, Voraussetzungen und Prüfungsform; Hinweis, wenn keine Beschreibung hinterlegt ist. |
 | US-004 Erst-, Zweit- und Drittwunsch | abgedeckt | Vollständig inklusive Umsortieren und Schutz vor Doppelauswahl. |
 | US-005 Motivationsschreiben | abgedeckt | Erscheint beim Erstwunsch, 500 Zeichen, vor Einreichung änderbar, in der Verwaltung einsehbar. |
-| US-006 Bewerbung einreichen | abgedeckt bis auf Persistenz | Vollständigkeitsprüfung, Prüfansicht, Bestätigung mit Zeitstempel. Kein Speichern. |
-| US-007 Bewerbungsstatus einsehen | offen | Kein Statusbildschirm, keine Wiederaufnahme einer eingereichten Bewerbung. |
-| US-008 Seminare und Kapazitäten verwalten | teilweise | Kapazität und Auslastung werden angezeigt, aber nicht gepflegt. |
-| US-009 Bewerbungen einsehen und zuordnen | teilweise | Übersicht mit Wünschen, Motivationsschreiben und KI-Vorschlag. Zuordnung ist statisch. |
-| US-010 Ergebnisse verwalten | angedeutet | Schaltfläche „Zuteilung bestätigen" ohne Veröffentlichungslogik. |
+| US-006 Bewerbung einreichen | abgedeckt | Vollständigkeitsprüfung, Prüfansicht, Bestätigung mit Zeitstempel, Speicherung mit Zuordnung zur s-Nummer. |
+| US-007 Bewerbungsstatus einsehen | abgedeckt | Eigene Statusansicht mit den Werten Eingereicht, In Bearbeitung und Zugeteilt. |
+| US-008 Seminare und Kapazitäten verwalten | teilweise | Kapazität und Auslastung werden angezeigt und bei der Zuordnung durchgesetzt, aber nicht gepflegt. |
+| US-009 Bewerbungen einsehen und zuordnen | abgedeckt | Übersicht mit Wünschen, Motivationsschreiben und KI-Vorschlag; manuelle Zuordnung mit Kapazitätsprüfung. |
+| US-010 Ergebnisse verwalten | abgedeckt bis auf Benachrichtigung | Veröffentlichen und Zurücknehmen; vor der Veröffentlichung ist das Ergebnis für Studierende nicht sichtbar. |
 
 Der ausführliche Abgleich inklusive offener Fragen an den Auftraggeber liegt im
 Projekt-Wissensspeicher und wird im Anforderungsgespräch besprochen.
 
+## Prüfung
+
+```
+node tests/ak-harness.mjs
+```
+
+62 Prüfungen gegen die Akzeptanzkriterien, ohne Framework und ohne Abhängigkeiten.
+Die Skriptblöcke der HTML-Dateien werden mit einem minimalen DOM-Stub geladen und
+direkt ausgeführt. Der Lauf ist Voraussetzung für das Pages-Deployment — ein
+Prototyp, der die Kriterien reißt, wird nicht veröffentlicht.
+
 ## Bewusst nicht enthalten
 
-Backend, Datenpersistenz, echte Authentifizierung, Rollen- und Rechteprüfung,
-echte PDF-Dateien, Benachrichtigungen.
+Server und Datenbank (die Ablage liegt im Browser und ist pro Gerät sichtbar),
+echte Authentifizierung gegen LDAP, Rollen- und Rechteprüfung, echte PDF-Dateien,
+Benachrichtigungen an Studierende, Pflege des Seminarangebots.
