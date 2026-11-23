@@ -10,8 +10,13 @@
 // Start:  node tests/ak-harness.mjs
 // Exit 0 = alle Pruefungen gruen.
 
-import fs from 'fs';
-const ROOT='/Users/etiennemathis/Desktop/Obsidian-SB-Server/Projects_Workspace/seminar-enrollment-prototype/prototyp/';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// Relativ zum Skript aufloesen, damit der Lauf unabhaengig vom
+// Arbeitsverzeichnis und von der Maschine funktioniert.
+const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'prototyp') + path.sep;
 const mem={};
 globalThis.localStorage={getItem:k=>(k in mem?mem[k]:null),setItem:(k,v)=>{mem[k]=String(v);},removeItem:k=>{delete mem[k];}};
 const mk=()=>({innerHTML:'',textContent:'',className:'',style:{},value:'',disabled:false,
