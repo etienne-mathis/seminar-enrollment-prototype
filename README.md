@@ -3,7 +3,7 @@
 Klickbarer UI-Prototyp für die Projektseminar-Einschreibung der HTW Dresden.
 Entstanden im Projektseminar Agentic Engineering, WS 2026/27.
 
-**Live:** https://etienne-mathis.github.io/seminar-enrollment-prototype/
+**Live:** https://htw-agentic-engineering.github.io/seminar-enrollment-prototype/
 
 > Prototyp zur Anforderungsvalidierung. Beispieldaten, simulierter Login, kein Backend.
 > Eingaben werden nicht gespeichert. Alle s-Nummern, Bewerbungen und Motivationstexte sind frei erfunden.
